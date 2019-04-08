@@ -10,7 +10,7 @@ public_key = private_key.get_pubkey()
 
 public_key_hex = public_key.to_bytes().hex()
 
-serverName = '127.0.0.1'   # Set as IP address of server
+serverName = '155.230.16.117'   # Set as IP address of server
 serverPort = 12000
 clientSocket = socket(AF_INET,SOCK_STREAM)
 clientSocket.connect((serverName,serverPort))
