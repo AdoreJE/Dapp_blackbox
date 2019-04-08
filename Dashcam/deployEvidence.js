@@ -3,7 +3,7 @@ var Web3 = require("web3");
 var  MyConstant= require('../Constant/constant.js')
 var exec = require('child_process').exec
 
-web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"));
+web3 = new Web3(new Web3.providers.HttpProvider("155.230.16.117:7545"));
 
 const dashcamAddress = MyConstant.dashcamAddr1
 // const dashPrivateKey = MyConstant.dashcamPrivateKey1

@@ -14,7 +14,7 @@ private_key = keys.UmbralPrivateKey.from_bytes(b'l\x94\xc0 b\xf6\x9c9\x08\x19\xf
 public_key = private_key.get_pubkey()
 public_key_hex = public_key.to_bytes().hex() #ID
 
-serverName = '127.0.0.1'   # Set as IP address of server
+serverName = '155.230.16.117'   # Set as IP address of server
 serverPort = 13000
 clientSocket = socket(AF_INET,SOCK_STREAM)
 clientSocket.connect((serverName,serverPort))
