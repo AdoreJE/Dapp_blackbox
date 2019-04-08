@@ -16,24 +16,31 @@ exports.SearchAddress = '0xFc64042BB506A7587Ff5fCEb7b443E20C60CbcC3'
 exports.ResponseAddress = '0xeaD3D8a4CEBBC3a551C7E0B57e94761247D19091'
 exports.RequestAddress =  '0xCA0182aaaFA9C1442c1c6E1d6eD7AC037B079139'
 //account
-//ganache
-exports.cloudAddr = '0x0C8f9DFe4fCDBaB8dAa6d8e08b661C7C35b44b5d'
-exports.cloudPrivateKey = Buffer.from('2bd27a5d14a2ab2762d939d3de81a39b2712598410ae7ad0441affeed7b3a194', 'hex')
+// //ganache mac
+// exports.cloudAddr = '0x0C8f9DFe4fCDBaB8dAa6d8e08b661C7C35b44b5d'
+// exports.cloudPrivateKey = Buffer.from('2bd27a5d14a2ab2762d939d3de81a39b2712598410ae7ad0441affeed7b3a194', 'hex')
 
-exports.dashcamAddr1 = '0x72b514013354051E5f1BA322784d668d913B03E7'
-exports.dashcamPrivateKey1 = Buffer.from('d6f6cfc116923b8bf05824d259b10d1f3751531c1a67fb5c9624f6da88e13b30', 'hex')
+// exports.dashcamAddr1 = '0x72b514013354051E5f1BA322784d668d913B03E7'
+// exports.dashcamPrivateKey1 = Buffer.from('d6f6cfc116923b8bf05824d259b10d1f3751531c1a67fb5c9624f6da88e13b30', 'hex')
 
-exports.dashcamAddr2 = '0x197bb7C88F6b29764a92670CE9d6Bc564f4CC5C4'
-exports.dashcamPrivateKey2 = Buffer.from('27144102c1bc8853d8ac3047be7e4376b8beb4aebc1e06bce6a76f55e49268b5', 'hex')
+// exports.dashcamAddr2 = '0x197bb7C88F6b29764a92670CE9d6Bc564f4CC5C4'
+// exports.dashcamPrivateKey2 = Buffer.from('27144102c1bc8853d8ac3047be7e4376b8beb4aebc1e06bce6a76f55e49268b5', 'hex')
 
-exports.dashcamAddr3 = '0xCc908b6f35287F2Ecc74eeD824B5Ec58159f1cfb'
-exports.dashcamPrivateKey3 = Buffer.from('60bf1bfba29d692f46490fdd14d5edabec048ad0a52122fb41ec33a096d30a39', 'hex')
+// exports.dashcamAddr3 = '0xCc908b6f35287F2Ecc74eeD824B5Ec58159f1cfb'
+// exports.dashcamPrivateKey3 = Buffer.from('60bf1bfba29d692f46490fdd14d5edabec048ad0a52122fb41ec33a096d30a39', 'hex')
 
-exports.requesterAddr1 = '0x02b3fdf11043D68E7B23CE67Ba6088Cf49Cf93A5'
-exports.requesterPrivateKey4 = Buffer.from('caa0b378508cfb4f645387534d11610c7515eedb9e20adc6040629f2c9b67a02', 'hex')
+// exports.requesterAddr1 = '0x02b3fdf11043D68E7B23CE67Ba6088Cf49Cf93A5'
+// exports.requesterPrivateKey4 = Buffer.from('caa0b378508cfb4f645387534d11610c7515eedb9e20adc6040629f2c9b67a02', 'hex')
 
-exports.requesterAddr2 = '0x720e7dB3CC8F80aCECd7c107eBD0FBB876f8d256'
-exports.requesterPrivateKey5 = Buffer.from('81273c8e65cf594d1808753c8e6c3948bf88690caa9b5f1d18ffe564e906f541', 'hex')
+// exports.requesterAddr2 = '0x720e7dB3CC8F80aCECd7c107eBD0FBB876f8d256'
+// exports.requesterPrivateKey5 = Buffer.from('81273c8e65cf594d1808753c8e6c3948bf88690caa9b5f1d18ffe564e906f541', 'hex')
+
+//ganache window
+
+exports.cloudAddr = '0x42808FFb8ed074646ac65aA47510328BEFBBA3a2'
+exports.dashcamAddr1 = '0xB14Ea779836549c9E3B32D8251725110697bf4c9'
+exports.requesterAddr1 = '0x73079d95ba2Fbc8416839A4e1C376555Fb4f3cc7'
+
 
 // exports.cloudAddr = '0x888b5096eeabc10e911527b1d21f9f04cf8c544d'
 // exports.dashcamAddr1 = '0xb87291aadb4a1a7da5c16cb87566e79feebb05b8'

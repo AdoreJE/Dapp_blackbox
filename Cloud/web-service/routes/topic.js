@@ -8,7 +8,7 @@ var auth = require('../lib/auth');
 var lowdb = require('../lib/db');
 var shortid = require('shortid');
 var sqlite3 = require('sqlite3').verbose();
-var db = new sqlite3.Database('/Users/thkim/Development/Blockchain/Dapp_blackbox/Cloud/evidence.db');
+var db = new sqlite3.Database('C:\Dapp_blackbox\Cloud\evidence.db');
 var loadImage = require('../lib/loadImage')
 console.log(db)
 var Web3 = require("web3");
