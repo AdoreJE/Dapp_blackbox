@@ -1,0 +1,8 @@
+Cloud/web-service/node_modules
+Dashcam/data
+Dashcam/node_modules
+*.mp4
+*.jpg
+*.png
+
+
