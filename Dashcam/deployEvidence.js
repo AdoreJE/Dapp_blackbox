@@ -1,9 +1,22 @@
 var Tx = require('ethereumjs-tx')
+const process = require('process');
 var Web3 = require("web3");
 var  MyConstant= require('../Constant/constant.js')
 var exec = require('child_process').exec
 
-web3 = new Web3(new Web3.providers.HttpProvider("155.230.16.117:7545"));
+const WebSocket = require('ws');
+const ws = new WebSocket('ws://155.230.16.117:13000');
+web3 = new Web3(new Web3.providers.WebsocketProvider("ws:155.230.16.117:7545"));
+
+
+
+ws.on('open', function open() {
+    ws.send('something');
+  });
+   
+  ws.on('message', function incoming(data) {
+    console.log(data);
+  });
 
 const dashcamAddress = MyConstant.dashcamAddr1
 // const dashPrivateKey = MyConstant.dashcamPrivateKey1
@@ -17,11 +30,11 @@ const frame_hash = process.argv[2]
 var lockStatus = false;
 //var fn = process.argv[3]
 
-// web3.eth.getTransactionCount(dashcamAddress, (err, txCount)=>{
+web3.eth.getTransactionCount(dashcamAddress, (err, txCount)=>{
 const data = MyConstant.EvidenceData
 const txObject = {
     from : dashcamAddress,
-    // nonce : web3.utils.toHex(txCount),
+    nonce : web3.utils.toHex(txCount),
     gasLimit: web3.utils.toHex(100000000),
     gasPrice: web3.utils.toHex(web3.utils.toWei('10', 'gwei')),
     gas : 1000000,
@@ -39,6 +52,8 @@ web3.eth.sendTransaction(txObject, (err, txHash)=>{
             gasLimit: web3.utils.toHex(1000000)
         },(err, result)=>{
             console.log('result: ',result)
+            process.exit()
+            return
         })
     })
     // setTimeout(function(){
@@ -53,6 +68,7 @@ web3.eth.sendTransaction(txObject, (err, txHash)=>{
     //         })
     //     })
     // },5000)
+})
 })
 
 // })

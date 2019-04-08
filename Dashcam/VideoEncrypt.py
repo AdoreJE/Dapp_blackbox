@@ -153,9 +153,9 @@ def main():
             data = public_key_hex + encrypted_file_name.encode('utf-8').hex() + cipher.hex() + capsule.to_bytes().hex() + contractAddress.encode('utf-8').hex()
             clientSocket.send(data.encode('utf-8'))
             
-            file_transfer('data/accident/'+dates+'_frame1.jpg')
+            #file_transfer('data/accident/'+dates+'_frame1.jpg')
             file_transfer('data/accident/'+dates+'_frame2.jpg')
-            file_transfer('data/encrypt/'+ encrypted_file_name)
+            #file_transfer('data/encrypt/'+ encrypted_file_name)
             #time.sleep(1)
         break
 

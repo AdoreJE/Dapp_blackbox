@@ -5,7 +5,7 @@ import os, sys
 from socket import *
 from umbral import pre, keys, signing, kfrags, config
 
-private_key = keys.UmbralPrivateKey.from_bytes(b'l\x94\xc0 b\xf6\x9c9\x08\x19\xf9E3\r\x10\xce\x9af\xb1J!\x87\xaf\x7f\x91\r\xbf~z\x1c\xa4\xd2')
+private_key = keys.UmbralPrivateKey.from_bytes(b'l\x94\xc0 b\xf6\x9c9\x08\x19\xf9E3\r\x10\xce\x9af\xb1J!\x87\xaf\x7f\x91\r\xbf~z\x1c\xa4\xd6')
 public_key = private_key.get_pubkey()
 
 public_key_hex = public_key.to_bytes().hex()
@@ -81,7 +81,7 @@ while True:
         
         # clientSocket.send(str.encode(ID))
         clientSocket.send(evid)
-        rename_file(video_path)
+       # rename_file(video_path)
         H[0] = H[1]
         c+=1
         
