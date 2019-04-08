@@ -37,9 +37,9 @@ exports.RequestAddress =  '0xCA0182aaaFA9C1442c1c6E1d6eD7AC037B079139'
 
 //ganache window
 
-exports.cloudAddr = '0x42808FFb8ed074646ac65aA47510328BEFBBA3a2'
-exports.dashcamAddr1 = '0xB14Ea779836549c9E3B32D8251725110697bf4c9'
-exports.requesterAddr1 = '0x73079d95ba2Fbc8416839A4e1C376555Fb4f3cc7'
+exports.cloudAddr = '0x5E35cd905cd0751630dcB0Ebbd82D44e037133Db'
+exports.dashcamAddr1 = '0x8658dD571b82e50AA35bE25F750c6cF67369812c'
+exports.requesterAddr1 = '0xC78fA6E703F36faf95aA98CDf641F6E9e6bd29F8'
 
 
 // exports.cloudAddr = '0x888b5096eeabc10e911527b1d21f9f04cf8c544d'
