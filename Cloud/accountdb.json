@@ -1,21 +1,21 @@
 {
   "cloud": [
     {
-      "cloudAddr": "0xb09e4d51e96ef03311dcb017a1e00070c78408c2"
+      "cloudAddr": "0xAB72FD06836Dff4Da3Cb22534C3936a02679e134"
     }
   ],
   "users": [
     {
       "email": "user1",
-      "password": "$2b$10$GUZX1HBo64W/CPICjBF2dumERJMu0etlt4MuwmAYOeyWmzLdj5aNS",
+      "password": "c89efdaa54c0f20c7adf612882df0950f5a951637e0307cdcb4c672f298b8bc6",
       "displayName": "user1",
-      "address": "0x72b514013354051E5f1BA322784d668d913B03E7"
+      "address": "0x539b95283083B07Fd5Ec895338d02B61cD57Aa4C"
     },
     {
       "email": "user2",
-      "password": "$2b$10$arM73Y7sKY8KHJT4ldzXfeU17XVtNX8yJG31kUmMduKNhFCuSQmIS",
+      "password": "c89efdaa54c0f20c7adf612882df0950f5a951637e0307cdcb4c672f298b8bc6",
       "displayName": "user2",
-      "address": "0x02b3fdf11043D68E7B23CE67Ba6088Cf49Cf93A5"
+      "address": "0xF83850566C539D1418a570aE66161b08eB3c7fcf"
     }
   ]
 }

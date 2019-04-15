@@ -9,7 +9,7 @@ var session = require('express-session')
 var FileStore = require('session-file-store')(session)
 var flash = require('connect-flash');
 var db = require('./lib/db');
-
+const fileUpload = require('express-fileupload');
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({
   extended: false
@@ -22,7 +22,7 @@ app.use(session({
   store: new FileStore()
 }))
 app.use(flash());
-
+app.use(fileUpload());
 var passport = require('./lib/passport')(app);
 
 // app.get('*', function (request, response, next) {

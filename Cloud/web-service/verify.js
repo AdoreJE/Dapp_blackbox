@@ -23,6 +23,6 @@ else if (num == 1){
         from : cloudAddr,
         gas:1000000
     }, (err, result)=>{
-        console.log(result)
+        console.log(err, result)
     })
 }

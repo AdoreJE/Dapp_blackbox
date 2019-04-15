@@ -13,6 +13,6 @@ def decrypt_file(key, in_filename, out_filename, chunksize=24 * 1024):
                 outfile.write(decryptor.decrypt(chunk))
             outfile.truncate(origsize)
 
-key = b'\xd4i\x8e\xdb\xdf\xe6\xfd\xab\x1b@!\x92\xe4\xe3\xee%\x9e\x99\xd4\xdb\x8f\xf71L\x82o%\xd4\x93\xf1*O'
+key = b'\xc8\x9e\xfd\xaaT\xc0\xf2\x0cz\xdfa(\x82\xdf\tP\xf5\xa9Qc~\x03\x07\xcd\xcbLg/)\x8b\x8b\xc6'
 decrypt_file(key, in_filename='data/encrypt/20190317_1247.mp4.aes', out_filename='data/decrypt/original.mp4')
 print ('Decrypt Done !')

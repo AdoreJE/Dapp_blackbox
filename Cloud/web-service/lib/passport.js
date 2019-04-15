@@ -1,5 +1,14 @@
 var db = require('../lib/db');
-var bcrypt = require('bcrypt');
+//var bcrypt = require('bcrypt');
+const { Keccak } = require('sha3');
+
+
+function generateHash(pwd){
+  const hash = new Keccak(256);
+  hash.update(pwd)
+  return hash.digest('hex')
+}
+
 
 module.exports = function (app) {
 
@@ -36,17 +45,17 @@ module.exports = function (app) {
                 email: email
             }).value();
             if (user) {
-                bcrypt.compare(password, user.password, function(err,result){
-                    if(result){
-                        return done(null, user, {
-                            message: 'Welcome.'
-                        });
-                    } else {
-                        return done(null, false, {
-                            message: 'Password is not correct.'
-                        });
-                    }
-                });
+                var p = generateHash(password)
+                if (p == user.password){
+                    return done(null, user, {
+                        message: 'Welcome.'
+                    });
+                }else{
+                    return done(null, false, {
+                        message: 'Password is not correct.'
+                    });
+                }
+                
             } else {
                 return done(null, false, {
                     message: 'There is no email.'

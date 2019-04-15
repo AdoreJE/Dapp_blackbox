@@ -7,14 +7,43 @@ from umbral import pre, keys, signing, kfrags, config
 import struct, hashlib, time
 import binascii
 from Crypto.Cipher import AES
+from Crypto import Random
 from Naked.toolshed.shell import execute_js, muterun_js
 import subprocess
 import time
-private_key = keys.UmbralPrivateKey.from_bytes(b'l\x94\xc0 b\xf6\x9c9\x08\x19\xf9E3\r\x10\xce\x9af\xb1J!\x87\xaf\x7f\x91\r\xbf~z\x1c\xa4\xd2')
-public_key = private_key.get_pubkey()
-public_key_hex = public_key.to_bytes().hex() #ID
 
-serverName = '155.230.16.117'   # Set as IP address of server
+def generateKey(pwd):
+    k = sha3.keccak_256()
+    k.update(pwd.encode('utf-8'))
+    return k.digest()
+
+def encrypt( key, input, out_filename='privateKey.enc'):
+        iv = Random.new().read( AES.block_size )
+        encryptor = AES.new( key, AES.MODE_CBC, iv )
+        with open(out_filename, 'wb') as outfile:
+            outfile.write(iv)
+            outfile.write(encryptor.encrypt(input))
+
+def decrypt(key, in_filename):
+    with open(in_filename, 'rb') as infile:
+        raw = infile.read()
+        iv = raw[:16]
+        privateKey = raw[16:]
+        decryptor = AES.new(key, AES.MODE_CBC, iv)
+        return decryptor.decrypt(privateKey)  
+
+email = input('email: ')
+password = input('password: ')
+f = open('static/'+email+'AccountInfo.txt', 'r')
+accountAddress = f.read()
+
+
+key = generateKey(password)
+private_key = keys.UmbralPrivateKey.from_bytes(decrypt(key, 'static/'+email+'PrivateKey.enc'))
+public_key = private_key.get_pubkey()
+# public_key_hex = public_key.to_bytes().hex() #ID
+
+serverName = '127.0.0.1'   # Set as IP address of server
 serverPort = 13000
 clientSocket = socket(AF_INET,SOCK_STREAM)
 clientSocket.connect((serverName,serverPort))
@@ -97,15 +126,9 @@ def file_transfer(filepath):
     print('전송완료[%s], 전송량[%d]' %(filepath.split('/')[2],data_transferred))
 
 def main():
-    password = make_pass()
-    key = hashlib.sha256(password).digest() #1st encrypt data
-    #print (binascii.hexlify(bytearray(key)))
-    # in_filename = '1.mp4'
-    # encrypt_file(key, in_filename, out_filename='output')
-    # print ('Encrypt Done !')
+    
     print(key)
-    l=[]
-    k = sha3.keccak_256()
+    
     while True:
         folder = glob.glob(os.path.join('data/normal',"*"))
         folder.sort()
@@ -129,12 +152,12 @@ def main():
                     cv2.imwrite('data/accident/'+dates+'_frame2.jpg', image2)
                     print('frame_hash: ', frame_hash)
                     print('\n\n')
-                    a = os.popen('node deployEvidence.js ' +frame_hash)
+                    a = os.popen('node deployEvidence.js ' +frame_hash+' '+email+' '+password)
                     lines = a.readlines()
                     
                 
                     print(lines)
-                    contractAddress = lines[1][:-1]
+                    contractAddress = lines[2][:-1]
                     #print(len(contractAddress.hex()))
 
             filename = dates+'.'+ext
@@ -147,15 +170,20 @@ def main():
             print ('Encrypt Done !')
             
             cipher, capsule = pre.encrypt(public_key, key)
-            
-            print('contractAddress:',contractAddress)
+            print("-"*64)
+            print('accountAddress: ', (accountAddress))
+            print('encrypted_file_name:',(encrypted_file_name))
+            print('cipher:',(cipher.hex()))
+            print('capsule:',(capsule.to_bytes().hex()))
+            print(capsule)
+            print('contractAddress:',(contractAddress))
            
-            data = public_key_hex + encrypted_file_name.encode('utf-8').hex() + cipher.hex() + capsule.to_bytes().hex() + contractAddress.encode('utf-8').hex()
-            clientSocket.send(data.encode('utf-8'))
+            data = accountAddress.encode('utf-8') + encrypted_file_name.encode('utf-8') + cipher.hex().encode('utf-8') + capsule.to_bytes().hex().encode('utf-8') + contractAddress.encode('utf-8')
+            clientSocket.send(data)
             
-            #file_transfer('data/accident/'+dates+'_frame1.jpg')
+            file_transfer('data/accident/'+dates+'_frame1.jpg')
             file_transfer('data/accident/'+dates+'_frame2.jpg')
-            #file_transfer('data/encrypt/'+ encrypted_file_name)
+            file_transfer('data/encrypt/'+ encrypted_file_name)
             #time.sleep(1)
         break
 

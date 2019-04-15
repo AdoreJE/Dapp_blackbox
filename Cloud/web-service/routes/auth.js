@@ -6,8 +6,17 @@ var sanitizeHtml = require('sanitize-html');
 var template = require('../lib/template.js');
 var shortid = require('shortid');
 var db = require('../lib/db');
-var bcrypt = require('bcrypt');
+//var bcrypt = require('bcrypt');
 var Web3 = require("web3");
+const { Keccak } = require('sha3');
+
+
+function generateHash(pwd){
+  const hash = new Keccak(256);
+  hash.update(pwd)
+  return hash.digest('hex')
+}
+
 web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"));
 
 
@@ -102,10 +111,11 @@ module.exports = function (passport) {
       console.log()
       var user={}
       web3.eth.personal.newAccount(pwd, (err, address)=>{
-        bcrypt.hash(pwd, 10, function (err, hash) {
+        
+
           user = {
             email: email,
-            password: hash,
+            password: generateHash(pwd),
             displayName: displayName,
             address : address
           };
@@ -120,14 +130,14 @@ module.exports = function (passport) {
             to : user.address,
             value : web3.utils.toWei('10', 'ether')
           }, (err, hash)=>{
-            console.log(hash)
+            console.log(err, hash)
             request.login(user, function (err) {
-              console.log('redirect');
+              console.log(err);
               return response.redirect('/');
             })
           })
           
-        });
+     
       })
 
       

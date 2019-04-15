@@ -7,10 +7,6 @@ web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"))
 var db = new sqlite3.Database('/Users/thkim/Development/Blockchain/Dapp_blackbox/Cloud/evidence.db');
 
 
-const cloudAddr = MyConstant.cloudAddr
-const cloudPrivateKey = MyConstant.cloudPrivateKey
-const SearchAddr = MyConstant.SearchAddress
-
 const SearchContract = new web3.eth.Contract(MyConstant.SearchABI, MyConstant.SearchAddress)
 //1초마다 반복실행
 ! function getAddress(){
@@ -18,8 +14,9 @@ const SearchContract = new web3.eth.Contract(MyConstant.SearchABI, MyConstant.Se
         console.log(result)
         
         for(var i = 0;i<result.length;i++){
-            var addr = result[i]
-            getData(addr)
+            var evidenceContractAddress = result[i]
+            //Evidence address
+            getData(evidenceContractAddress)
         }
     })
 
@@ -28,16 +25,16 @@ const SearchContract = new web3.eth.Contract(MyConstant.SearchABI, MyConstant.Se
     },1000)
 }()
 
-function getData(addr){
-    console.log(addr)
-    SearchContract.methods.getData(addr).call().then((data)=>{
+function getData(evidenceContractAddress){
+    console.log(evidenceContractAddress)
+    SearchContract.methods.getData(evidenceContractAddress).call().then((data)=>{
         //console.log(data)
         var stmt = db.prepare("INSERT OR IGNORE INTO contract VALUES (?,?,?)")
         var time = data[0].toString()
         var location = data[1].toString()
         
     
-        stmt.run(addr, time, location)
+        stmt.run(evidenceContractAddress, time, location)
         stmt.finalize()
     })
 }

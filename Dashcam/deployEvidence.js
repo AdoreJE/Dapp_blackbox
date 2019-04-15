@@ -3,32 +3,29 @@ const process = require('process');
 var Web3 = require("web3");
 var  MyConstant= require('../Constant/constant.js')
 var exec = require('child_process').exec
-
+var fs = require('fs')
 const WebSocket = require('ws');
-const ws = new WebSocket('ws://155.230.16.117:13000');
-web3 = new Web3(new Web3.providers.WebsocketProvider("ws:155.230.16.117:7545"));
-
-
-
-ws.on('open', function open() {
-    ws.send('something');
-  });
+// const ws = new WebSocket('ws://155.230.16.117:13000');
+web3 = new Web3(new Web3.providers.WebsocketProvider("ws:localhost:7545"));
+const frame_hash = process.argv[2]
+const email = process.argv[3]
+const password = process.argv[4]
+// ws.on('open', function open() {
+//     ws.send('something');
+//   });
    
-  ws.on('message', function incoming(data) {
-    console.log(data);
-  });
+//   ws.on('message', function incoming(data) {
+//     console.log(data);
+//   });
 
-const dashcamAddress = MyConstant.dashcamAddr1
+const dashcamAddress = fs.readFileSync(`static/${email}AccountInfo.txt`, 'utf-8')
 // const dashPrivateKey = MyConstant.dashcamPrivateKey1
 
 const EvidenceABI = MyConstant.EvidenceABI
 
 // const SearchAddress = MyConstant.SearchAddress
 
-const frame_hash = process.argv[2]
-
-var lockStatus = false;
-//var fn = process.argv[3]
+web3.eth.personal.unlockAccount(dashcamAddress, password,0).then(console.log)
 
 web3.eth.getTransactionCount(dashcamAddress, (err, txCount)=>{
 const data = MyConstant.EvidenceData
@@ -52,6 +49,7 @@ web3.eth.sendTransaction(txObject, (err, txHash)=>{
             gasLimit: web3.utils.toHex(1000000)
         },(err, result)=>{
             console.log('result: ',result)
+            web3.eth.personal.lockAccount(dashcamAddress)
             process.exit()
             return
         })
