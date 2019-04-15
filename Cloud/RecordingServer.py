@@ -54,7 +54,7 @@ class ClientThread(threading.Thread):
                 print(e)
                 break
 
-host = "127.0.0.1"
+host = "155.230.16.117"
 serverPort = 12000
 serverSocket = socket(AF_INET, SOCK_STREAM)
 

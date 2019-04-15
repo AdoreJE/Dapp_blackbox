@@ -17,7 +17,7 @@ function generateHash(pwd){
   return hash.digest('hex')
 }
 
-web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"));
+web3 = new Web3(new Web3.providers.WebsocketProvider("ws://155.230.16.117:7545"))
 
 
 

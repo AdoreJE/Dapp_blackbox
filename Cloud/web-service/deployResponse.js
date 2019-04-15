@@ -1,6 +1,6 @@
 var Web3 = require('web3')
 var MyConstant = require('../../Constant/constant.js')
-web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"))
+web3 = new Web3(new Web3.providers.WebsocketProvider("ws://155.230.16.117:7545"))
 var db = require('./lib/db.js');
 
 
@@ -23,7 +23,7 @@ web3.eth.getTransactionCount(cloudAddr, (err, txCount)=>{
         var contractAddr=''
         web3.eth.getTransactionReceipt(txh, (err, receipt)=>{
           console.log(receipt)
-
+            process.exit()
         })
         // setTimeout(function() {
         //   return web3.eth.getTransactionReceipt(txh).then((receipt)=>{

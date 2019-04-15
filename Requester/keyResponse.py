@@ -92,7 +92,7 @@ myPublicKeyHex = myPublicKey.to_bytes().hex().encode('utf-8')
 mySigner = signing.Signer(private_key=myPrivateKey)
 
 
-serverName = '127.0.0.1'   # Set as IP address of server
+serverName = '155.230.16.117'   # Set as IP address of server
 serverPort = 15000
 # print(len(password.encode('utf-8')))
 

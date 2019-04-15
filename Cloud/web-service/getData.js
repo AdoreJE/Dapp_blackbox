@@ -2,7 +2,7 @@
 var Web3 = require('web3')
 var sqlite3 = require('sqlite3').verbose();
 var MyConstant = require('../../Constant/constant.js')
-web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"))
+web3 = new Web3(new Web3.providers.WebsocketProvider("ws://155.230.16.117:7545"))
 
 var db = new sqlite3.Database('/Users/thkim/Development/Blockchain/Dapp_blackbox/Cloud/evidence.db');
 

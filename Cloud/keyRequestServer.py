@@ -94,7 +94,7 @@ if len(rows) != 0:
 
 serverPort = 15000
 serverSocket = socket(AF_INET, SOCK_STREAM)
-serverSocket.bind(('127.0.0.1', serverPort))
+serverSocket.bind(('', serverPort))
 
 '''
     id pwd를 전송받아 사용자 확인

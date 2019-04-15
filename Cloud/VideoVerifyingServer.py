@@ -131,7 +131,7 @@ class ClientThread(threading.Thread):
             
 
 def main():
-    host = "127.0.0.1"
+    host = "155.230.16.117"
     serverPort = 13000
     serverSocket = socket(AF_INET, SOCK_STREAM)
 

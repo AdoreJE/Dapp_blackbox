@@ -1,6 +1,6 @@
 var Web3 = require('web3')
 var MyConstant = require('../Constant/constant.js')
-web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"))
+web3 = new Web3(new Web3.providers.WebsocketProvider("ws://155.230.16.117:7545"))
 
 const Addr = MyConstant.requesterAddr1
 //const evidAddr = '0x8Dce97144823fC2a914356C7ef262B08E0858c50'
