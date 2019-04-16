@@ -11,7 +11,7 @@ from Crypto import Random
 from Naked.toolshed.shell import execute_js, muterun_js
 import subprocess
 import time
-
+config.set_default_curve()
 def generateKey(pwd):
     k = sha3.keccak_256()
     k.update(pwd.encode('utf-8'))
@@ -36,18 +36,20 @@ email = input('email: ')
 password = input('password: ')
 f = open('static/'+email+'AccountInfo.txt', 'r')
 accountAddress = f.read()
-
+print(accountAddress)
 
 key = generateKey(password)
 private_key = keys.UmbralPrivateKey.from_bytes(decrypt(key, 'static/'+email+'PrivateKey.enc'))
 public_key = private_key.get_pubkey()
 # public_key_hex = public_key.to_bytes().hex() #ID
-
+print(public_key)
 serverName = '155.230.16.117'   # Set as IP address of server
-serverPort = 13000
+serverPort = 14000
 clientSocket = socket(AF_INET,SOCK_STREAM)
 clientSocket.connect((serverName,serverPort))
 c=0
+
+
 # def get_file_name(video_path):
 #     parts = video_path.split(os.path.sep)
 #     filename = parts[2]

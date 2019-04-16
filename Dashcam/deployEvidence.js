@@ -6,7 +6,8 @@ var exec = require('child_process').exec
 var fs = require('fs')
 const WebSocket = require('ws');
 // const ws = new WebSocket('ws://155.230.16.117:13000');
-web3 = new Web3(new Web3.providers.WebsocketProvider("ws://155.230.16.117:7545"))
+// web3 = new Web3(new Web3.providers.HttpProvider("http://155.230.16.117:7545"))
+web3 = new Web3(new Web3.providers.WebsocketProvider("http://155.230.16.117:7545"))
 const frame_hash = process.argv[2]
 const email = process.argv[3]
 const password = process.argv[4]
@@ -38,36 +39,42 @@ const txObject = {
     data : data
     }
 
-web3.eth.sendTransaction(txObject, (err, txHash)=>{
-    console.log('txHash:', txHash)
-    var txHash = txHash
-    web3.eth.getTransactionReceipt(txHash, (err, receipt)=>{
-        console.log(receipt.contractAddress)
-        const EvidenceContract = new web3.eth.Contract(EvidenceABI, receipt.contractAddress)
-        EvidenceContract.methods.setEvidence(frame_hash, 4, 4).send({
-            from : dashcamAddress,
-            gasLimit: web3.utils.toHex(1000000)
-        },(err, result)=>{
-            console.log('result: ',result)
-            web3.eth.personal.lockAccount(dashcamAddress)
-            process.exit()
-            return
-        })
-    })
-    // setTimeout(function(){
-    //     return web3.eth.getTransactionReceipt(txHash).then((receipt)=>{
-    //         console.log('receipt:',receipt.contractAddress)
-    //         const EvidenceContract = new web3.eth.Contract(EvidenceABI, receipt.contractAddress)
-    //         EvidenceContract.methods.setEvidence(frame_hash, 4, 4).send({
-    //             from : dashcamAddress,
-    //             gasLimit: web3.utils.toHex(1000000)
-    //         },(err, result)=>{
-    //             console.log('result: ',result)
-    //         })
-    //     })
-    // },5000)
+    sendTransaction(txObject)
+
+
+// web3.eth.sendTransaction(txObject, (err, txHash)=>{
+//     console.log('txHash:', txHash)
+//     var txHash = txHash
+//     web3.eth.getTransactionReceipt(txHash, (err, receipt)=>{
+//         console.log(receipt)
+//         console.log(receipt.contractAddress)
+//         const EvidenceContract = new web3.eth.Contract(EvidenceABI, receipt.contractAddress)
+//         EvidenceContract.methods.setEvidence(frame_hash, 4, 4).send({
+//             from : dashcamAddress,
+//             gasLimit: web3.utils.toHex(1000000)
+//         },(err, result)=>{
+//             console.log('result: ',result)
+//             web3.eth.personal.lockAccount(dashcamAddress)
+//             process.exit()
+//             return
+//         })
+//     })
+
+//     })
 })
-})
+
+
+async function sendTransaction(txObject){
+    var txHash = await web3.eth.sendTransaction(txObject)
+    console.log(txHash)
+    getReceipt(txHash)
+}
+async function getReceipt(txHash){
+    var receipt = await web3.eth.getTransactionReceipt(txHash)
+    console.log(receipt)
+    
+}
+
 
 // })
 
