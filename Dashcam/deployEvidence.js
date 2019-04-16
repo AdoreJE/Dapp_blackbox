@@ -28,14 +28,14 @@ const EvidenceABI = MyConstant.EvidenceABI
 
 web3.eth.personal.unlockAccount(dashcamAddress, password,0).then(console.log)
 
-web3.eth.getTransactionCount(dashcamAddress, (err, txCount)=>{
+//web3.eth.getTransactionCount(dashcamAddress, (err, txCount)=>{
 const data = MyConstant.EvidenceData
 const txObject = {
     from : dashcamAddress,
-    nonce : web3.utils.toHex(txCount),
-    gasLimit: web3.utils.toHex(100000000),
-    gasPrice: web3.utils.toHex(web3.utils.toWei('10', 'gwei')),
-    gas : 1000000,
+    // nonce : web3.utils.toHex(txCount),
+    // gasLimit: web3.utils.toHex(100000000),
+    // gasPrice: web3.utils.toHex(web3.utils.toWei('10', 'gwei')),
+    // gas : 1000000,
     data : data
     }
 
@@ -61,7 +61,7 @@ const txObject = {
 //     })
 
 //     })
-})
+// })
 
 
 async function sendTransaction(txObject){
