@@ -125,20 +125,8 @@ module.exports = function (passport) {
           //console.log(cloudAddr)
           //register 후 바로 login
           web3.eth.personal.unlockAccount(user.address, pwd, 0).then(console.log)
-          web3.eth.sendTransaction({
-            from : cloudAddr,
-            to : user.address,
-            value : web3.utils.toWei('10', 'ether')
-          }, (err, hash)=>{
-            console.log(err, hash)
-            request.login(user, function (err) {
-              console.log(err);
-
-              request.flash('success', user.address);
-              return response.redirect('/');
-            })
-          })
           
+          sendTransaction(request, response)
      
       })
 
@@ -162,6 +150,24 @@ module.exports = function (passport) {
       
     }
   });
+
+async function sendTransaction(request, response){
+  var hash = await web3.eth.sendTransaction({
+    from : cloudAddr,
+    to : user.address,
+    value : web3.utils.toWei('10', 'ether')
+  })
+  console.log(hash)
+
+  request.login(user, function (err) {
+    console.log(err);
+
+    request.flash('success', user.address);
+    return response.redirect('/');
+  })
+ 
+}
+
 
   router.get('/logout', function (request, response) {
     web3.eth.personal.lockAccount(request.user.address)
