@@ -133,6 +133,8 @@ module.exports = function (passport) {
             console.log(err, hash)
             request.login(user, function (err) {
               console.log(err);
+
+              request.flash('success', user.address);
               return response.redirect('/');
             })
           })
