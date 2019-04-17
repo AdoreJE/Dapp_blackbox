@@ -315,24 +315,28 @@ router.get('/requester', function (request, response) {
 		response.redirect('/');
 		return false;
 	}
-	const requestContract = new web3.eth.Contract(MyConstant.RequestABI,
-													'0x3c04C588fF0C1D8FCea8456453C933e8fCD35290')
-	requestContract.methods.getReKey().call({from:request.user.address}, (err, result)=>{
-		var rekey = result['_rekey']
-		var link = result['_link']
-		//console.log('body: ', body)   
-		var title = 'WEB - owner';
-		var html = template.HTML(title,`
-									<p>rekey : ${rekey}</p>
-									<p>link : ${link}</p>
-								`, `
-									<p><a href="/topic/search">search</a></p>
-									<p><a href="/topic/owner">owner</a></p>
-									<p><a href="/topic/requester">requester</a><p>
-								`
-     							, auth.statusUI(request, response));
-   		response.send(html);
-  	})
+	db.all('SELECT * FROM requestContract WHERE requesterAddress=?', [request.user.address], (err, row)=>{
+		console.log(row)
+		request.send(row)
+	})
+	// const requestContract = new web3.eth.Contract(MyConstant.RequestABI,
+	// 												'0x3c04C588fF0C1D8FCea8456453C933e8fCD35290')
+	// requestContract.methods.getReKey().call({from:request.user.address}, (err, result)=>{
+	// 	var rekey = result['_rekey']
+	// 	var link = result['_link']
+	// 	//console.log('body: ', body)   
+	// 	var title = 'WEB - owner';
+	// 	var html = template.HTML(title,`
+	// 								<p>rekey : ${rekey}</p>
+	// 								<p>link : ${link}</p>
+	// 							`, `
+	// 								<p><a href="/topic/search">search</a></p>
+	// 								<p><a href="/topic/owner">owner</a></p>
+	// 								<p><a href="/topic/requester">requester</a><p>
+	// 							`
+  //    							, auth.statusUI(request, response));
+  //  		response.send(html);
+  // 	})
 })
 
 module.exports = router;
