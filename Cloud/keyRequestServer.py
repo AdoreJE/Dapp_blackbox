@@ -194,22 +194,24 @@ elif request[1:-1] =='reKey':
     for i in kfs_temp:
         kfs.append(kfrags.KFrag.from_bytes(i))
         
+    print(kfs)
 
-    # print('bpublickey: ', publicKey.to_bytes().hex())
-    capsule.set_correctness_keys(delegating=ownerPublicKey,
-                                    receiving=requesterPublicKey,
-                                    verifying=ownerPublicKey)
+    # #durl
+    # # print('bpublickey: ', publicKey.to_bytes().hex())
+    # capsule.set_correctness_keys(delegating=ownerPublicKey,
+    #                                 receiving=requesterPublicKey,
+    #                                 verifying=ownerPublicKey)
 
-    cfrags = list()           # Bob's cfrag collection
-    for kfrag in kfs:
-        cfrag = pre.reencrypt(kfrag, capsule)
-        cfrags.append(cfrag)
+    # cfrags = list()           # Bob's cfrag collection
+    # for kfrag in kfs:
+    #     cfrag = pre.reencrypt(kfrag, capsule)
+    #     cfrags.append(cfrag)
 
-    for cfrag in cfrags:
-        capsule.attach_cfrag(cfrag)
+    # for cfrag in cfrags:
+    #     capsule.attach_cfrag(cfrag)
 
-    print(capsule.to_bytes().hex())
-    
+    # print(capsule.to_bytes().hex())
+    # #durl
     
     # cleartext =  pre.decrypt(ciphertext=bytes.fromhex(cipher.decode()), capsule=capsule, decrypting_key=myPrivateKey)
     # print(cleartext)# == plaintext

@@ -102,6 +102,11 @@ while True:
                 rekey = data[120:316]
                 print('cipher: ', cipher)
                 print('rekey: ', rekey)
+                capsule = pre.Capsule.from_bytes(bytes.fromhex(rekey.decode()), params = myPublicKey.params)  
+
+                cleartext =  pre.decrypt(ciphertext=bytes.fromhex(cipher.decode()), capsule=capsule, decrypting_key=myPrivateKey)
+                print(cleartext)# == plaintext
+
         elif '0' == data[0]:
             print('incorrect')
                 
