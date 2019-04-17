@@ -16,6 +16,6 @@ exports.SearchAddress = '0xc54b143a4eE541352F1c3d0f7e17DE9F84c6Fa5A'
 exports.ResponseAddress = '0x1fA7Cd4547EC52A91158D591261d2903419C84FC'
 
 //account
-exports.cloudAddr = '0x4cFfF49D6Eb41D07CaC598f5aE337Fc3D1DcEc52'
+exports.cloudAddr = '0x93d32fc1ab2334ede4211e61fdfc7cc54773ad3d'
 exports.dashcamAddr1 = '0xFeBF5CCA854CCA63A231FBBCfecC5833B1D70F26'
 exports.requesterAddr1 = '0xB731Cf908cbda4a8816c470d73545BE65cb0f1d7'

@@ -17,7 +17,7 @@ function generateHash(pwd){
   return hash.digest('hex')
 }
 
-web3 = new Web3(new Web3.providers.WebsocketProvider("ws://155.230.16.117:7545"))
+web3 = new Web3(new Web3.providers.HttpProvider("http://155.230.16.117:7545"))
 
 
 
@@ -125,9 +125,23 @@ module.exports = function (passport) {
           //console.log(cloudAddr)
           //register 후 바로 login
           web3.eth.personal.unlockAccount(user.address, pwd, 0).then(console.log)
+         
+         web3.eth.sendTransaction({
+            from : cloudAddr,
+            to : user.address,
+            value : web3.utils.toWei('10', 'ether')
+          }, (err, hash)=>{
+            console.log(hash)
+        
+            request.login(user, function (err) {
+              console.log(err);
           
-          sendTransaction(request, response)
-     
+              request.flash('success', user.address);
+              return response.redirect('/');
+            })
+          })
+         
+          
       })
 
       
@@ -151,7 +165,7 @@ module.exports = function (passport) {
     }
   });
 
-async function sendTransaction(request, response){
+async function sendTransaction(request, response,cloudAddr, user){
   var hash = await web3.eth.sendTransaction({
     from : cloudAddr,
     to : user.address,

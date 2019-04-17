@@ -132,7 +132,7 @@ class ClientThread(threading.Thread):
 
 def main():
     host = "155.230.16.117"
-    serverPort = 13000
+    serverPort = 14000
     serverSocket = socket(AF_INET, SOCK_STREAM)
 
     serverSocket.bind((host, serverPort))

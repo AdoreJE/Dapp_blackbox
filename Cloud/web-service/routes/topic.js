@@ -15,7 +15,7 @@ var loadRequestDetail = require('../lib/loadRequestDetail')
 console.log(db)
 var Web3 = require("web3");
 var MyConstant = require("../../../Constant/constant")
-web3 = new Web3(new Web3.providers.WebsocketProvider("ws://155.230.16.117:7545"))
+web3 = new Web3(new Web3.providers.HttpProvider("http://155.230.16.117:7545"))
 
 var exec = require('child_process').exec,
     child;
