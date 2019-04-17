@@ -222,8 +222,9 @@ elif request[1:-1] =='reKey':
 elif request[1:-1] =='trans':
     #encrypted file transfer
     print(cipher)
+    print(capsule)
     print(rekey)
-    data = cipher + rekey[1:-1].encode('utf-8')
+    data = cipher + capsule + rekey[1:-1].encode('utf-8')
     connectionSocket.send(data)
     # file_transfer()
 

@@ -97,13 +97,19 @@ while True:
                 # time.sleep(1)
                 # clientSocket.close()
             elif request =='trans':
-                data = clientSocket.recv(1024)
+                data = clientSocket.recv(2048)
                 cipher = data[:120]
-                rekey = data[120:316]
-                print('cipher: ', cipher)
-                print('rekey: ', rekey)
-                capsule = pre.Capsule.from_bytes(bytes.fromhex(rekey.decode()), params = myPublicKey.params)  
+                capsule = data[120:316]
+                rekey = data[316:]
 
+                print('cipher: ', cipher)
+                print('capsule: ', capsule)
+                print('rekey: ', rekey)
+                capsule = pre.Capsule.from_bytes(bytes.fromhex(capsule.decode()), params = myPublicKey.params)  
+                
+                kfrag = kfrags.KFrag.from_bytes(rekey)
+                cfrag = pre.reencrypt(kfrag, capsule)
+                capsule.attach_cfrag(cfrag)
                 cleartext =  pre.decrypt(ciphertext=bytes.fromhex(cipher.decode()), capsule=capsule, decrypting_key=myPrivateKey)
                 print(cleartext)# == plaintext
 
