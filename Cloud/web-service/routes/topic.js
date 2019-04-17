@@ -99,15 +99,18 @@ router.post('/search_request', function (request, response) {
 							auth.statusUI(request, response)
 						);
 	//request requester's public key
-	child = exec(`python3 ../keyRequestServer.py --request 'puKey' --email '${request.user.email}' --password '${request.user.password}'`, function (error, stdout, stderr) {
+	child = exec(`python ../keyRequestServer.py --request 'puKey' --email '${request.user.email}' --password '${request.user.password}'`, function (error, stdout, stderr) {
 		var output = stdout.split('\n')
-		var correctness = output[1]
+		console.log(output)
+		var correctness = output[0].substring(0,7)
+		console.log(correctness)
+		
 		if(correctness !== 'correct'){
 			console.log('error')
 			response.redirect('/topic/search_process')
-			return
+			return false;
 		}
-		var requesterPublicKey = output[2]
+		var requesterPublicKey = output[1].substring(0,66)
 		console.log('requesterPublicKey: ', requesterPublicKey)
 		console.log('stderr: ' + stderr);
 		if (error !== null) {
@@ -140,7 +143,9 @@ router.post('/search_request', function (request, response) {
 						from : requesterAccountAddress,
 						gas:1000000
                 	}, (err, result)=>{
-                    		console.log("requestVideo txHash: ", result)
+												console.log("requestVideo txHash: ", result)
+												response.send(html);
+												return
                 		})
 			})
             
@@ -163,7 +168,7 @@ router.post('/search_request', function (request, response) {
         })
 		})
 	})
-  	response.send(html);
+  	
 });
 
 router.get('/owner', function (request, response) {
@@ -239,7 +244,7 @@ router.post('/owner_yes', (request, response)=>{
     var body=''
     var post = request.body
     var requestContractAddress = post.requestContractAddress
-		var publicKey = post.publicKey.substring(2,68)
+		var publicKey = post.publicKey
 		
 		var evidenceContractAddress = post.evidenceContractAddress
     console.log('requestContractAddr: ', requestContractAddress)
@@ -249,11 +254,11 @@ router.post('/owner_yes', (request, response)=>{
 		
     requestContract = new web3.eth.Contract(MyConstant.RequestABI, requestContractAddress)
 	//python 실행 재암호화키와 link 받아오기
-		child = exec(`python3 ../keyRequestServer.py --request "reKey" --email "${request.user.email}" --password "${request.user.password}" --publicKey ${publicKey} --evidenceContractAddress "${evidenceContractAddress}"`, function (error, stdout, stderr) {
+		child = exec(`python ../keyRequestServer.py --request 'reKey' --email '${request.user.email}' --password '${request.user.password}' --publicKey '${publicKey}' --evidenceContractAddress '${evidenceContractAddress}'`, function (error, stdout, stderr) {
 			var output = stdout.split('\n')
 			console.log(output)
-			var correctness = output[1]
-			var capsule = output[3]
+			var correctness = output[0].substring(0,7)
+			var capsule = output[2].substring(0,196)
 			console.log(capsule)
 			console.log('stderr: ' + stderr);
 			if (error !== null) {

@@ -111,7 +111,7 @@ module.exports = function (passport) {
       console.log()
       var user={}
       web3.eth.personal.newAccount(pwd, (err, address)=>{
-        
+        console.log('address: ', address)
 
           user = {
             email: email,

@@ -20,14 +20,14 @@ web3.eth.getTransactionCount(cloudAddr, (err, txCount)=>{
     web3.eth.sendTransaction(txObject, (err, txHash)=>{
         console.log("deployed contract Tx hash: ", txHash)  
         
-        setTimeout(function() {
-          return web3.eth.getTransactionReceipt(txHash).then((receipt)=>{
+       // setTimeout(function() {
+           web3.eth.getTransactionReceipt(txHash).then((receipt)=>{
             
             contractAddr = receipt.contractAddress
             console.log('receipt : ', contractAddr)
             return
           })
-        }, 5000);
+      //  }, 5000);
         // return
     })
 })

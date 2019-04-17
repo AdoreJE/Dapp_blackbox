@@ -69,19 +69,23 @@ parser.add_argument("--request", type=str, help="input request type")
 parser.add_argument("--email", type=str, help="input email")
 parser.add_argument("--password", type=str, help="input password")
 parser.add_argument("--publicKey", type=str, help="input requester's publicKey", default=None)
-parser.add_argument("--evidenceContractAddress", type=str, help="input evidenceContractAddress",default=None)
+parser.add_argument("--evidenceContractAddress", type=str, help="input evidenceContractAddress",default="test")
 
 args = parser.parse_args()
 request = args.request
+# print(request)
 email = args.email
+# print(email)
 password = args.password
+# print(password)
 publicKey = args.publicKey
+
 # print(publicKey)
 evidenceContractAddress = args.evidenceContractAddress
-
+# print(evidenceContractAddress)
 conn = sqlite3.connect('../evidence.db')
 curs = conn.cursor()
-curs.execute('SELECT * FROM video WHERE evidenceContractAddress=?', (evidenceContractAddress,))
+curs.execute('SELECT * FROM video WHERE evidenceContractAddress=?', (evidenceContractAddress[1:-1],))
 rows = curs.fetchall()
 #print(rows)
 cipher=''
@@ -105,15 +109,20 @@ serverSocket.bind(('', serverPort))
 serverSocket.listen(1)
 connectionSocket, addr = serverSocket.accept()
 # print(addr)
-receivedData = connectionSocket.recv(128)
+receivedData = connectionSocket.recv(1024)
+# print(email)
 receivedData = receivedData.decode()
 receivedPassword = receivedData[:64]
 receivedEmail = receivedData[64:128]
+# print(generateHash(email))
+# print(receivedPassword)
+# print(password[1:-1])
+# print(receivedEmail)
 
-
-if generateHash(email) == receivedEmail and password == receivedPassword:
+# time.sleep(1)
+if generateHash(email[1:-1]) == receivedEmail and password[1:-1] == receivedPassword:
     print('correct')
-    connectionSocket.send(('1'+request).encode('utf-8'))
+    connectionSocket.send(('1'+request[1:-1]).encode('utf-8'))
     # connectionSocket.send(request.encode('utf-8'))
 else:
     print('incorrect')
@@ -122,10 +131,10 @@ else:
     serverSocket.close()
     exit()
 
-if request == 'puKey':
+if request[1:-1] == 'puKey':
     requesterPublicKey = connectionSocket.recv(66)
-    print(requesterPublicKey[:66])
-elif request =='reKey':
+    print(requesterPublicKey.decode())
+elif request[1:-1] =='reKey':
     print('rekey')
     
     # key = generateKey('1')
@@ -136,16 +145,18 @@ elif request =='reKey':
     # requesterPublicKey = publicKey.to_bytes().hex().encode('utf-8')
    
     # data = requesterPublicKey+cipher
-    connectionSocket.send(publicKey.encode())
+    
+    connectionSocket.send(publicKey[1:-1].encode())
     
     ownerPublicKey = connectionSocket.recv(66)
+    print(ownerPublicKey)
     # time.sleep(1)
     # print(ownerPublicKey)
     # print(time.time())
 
     # publicKey = keys.UmbralPublicKey.from_bytes(bytes.fromhex(publicKey))
     ownerPublicKey = keys.UmbralPublicKey.from_bytes(bytes.fromhex(ownerPublicKey.decode()))
-    requesterPublicKey = keys.UmbralPublicKey.from_bytes(bytes.fromhex(publicKey))
+    requesterPublicKey = keys.UmbralPublicKey.from_bytes(bytes.fromhex(publicKey[1:-1]))
 
     capsule = pre.Capsule.from_bytes(bytes.fromhex(capsule.decode()), params = requesterPublicKey.params)  
     # print(capsule)

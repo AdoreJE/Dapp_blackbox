@@ -3,7 +3,7 @@ import sha3
 import sqlite3
 import os
 import threading
-
+import time
 def parse_data(evid):
     accountAddress = evid[:42]  #42
     filename=evid[42:63] #21
@@ -29,6 +29,7 @@ def hash_function(data):
 
 def file_receive(csocket, filepath):
     size = csocket.recv(9)
+    
     size = int(size.decode())
     print('size: ', size)
     #암호화된 영상 데이터
@@ -39,27 +40,34 @@ def file_receive(csocket, filepath):
             while True:
                 if unit > size:
                     data = csocket.recv(size)
-                    data_transferred += len(data)
-                    f.write(data)
+                    data_transferred += f.write(data)
+                    
+                    print('1')
                     break
                 
-                data_transferred += unit
+                #data_transferred += unit
                 
-                if data_transferred < size:
+                if data_transferred + unit < size:
                     data = csocket.recv(unit)
-                    f.write(data)
+                    data_transferred+=f.write(data)
                 elif data_transferred == size:
                     data = csocket.recv(unit)
-                    f.write(data)
+                    data_transferred+=f.write(data)
+                    print('2')
                     break
                 else:
-                    unit = data_transferred % size
-                    data = csocket.recv(1024-unit)
-                    f.write(data)
-                    data_transferred = data_transferred - unit
+                    
+                    data = csocket.recv(size%data_transferred)
+                    
+                    c=f.write(data)
+                    # print(c)
+                    data_transferred+=c
+                    #data_transferred = data_transferred - unit
+                    # print('3')
                     break
         except Exception as e:
             print(e)
+    
     print('전송완료[%s], 전송량[%d]' %(filepath.split('/')[3],data_transferred))
 
 class VerifyThread(threading.Thread):
@@ -118,16 +126,17 @@ class ClientThread(threading.Thread):
             
             accountAddress, filename, cipher, capsule, contractAddress= parse_data(evid)
             print("-"*64)
-            # print("accountAddress: ", accountAddress)
-            # print("filename: ",filename)
-            # print("cipher: ", cipher)
-            # print("capsule: ", capsule)
-            # print("contractAddress: ", contractAddress) #evidenceContract
+            print("accountAddress: ", accountAddress)
+            print("filename: ",filename)
+            print("cipher: ", cipher)
+            print("capsule: ", capsule)
+            print("contractAddress: ", contractAddress) #evidenceContract
             file_receive(self.csocket, 'web-service/public/frame/'+ contractAddress+'_frame1.jpg')
             file_receive(self.csocket, 'web-service/public/frame/'+ contractAddress+'_frame2.jpg')
             file_receive(self.csocket, 'web-service/public/video/'+ contractAddress+'.aes')
             newthread = VerifyThread(accountAddress, filename, contractAddress, cipher, capsule)
             newthread.start()
+            time.sleep(3)
             
 
 def main():
