@@ -132,7 +132,7 @@ router.post('/search_request', function (request, response) {
         }
 
         web3.eth.sendTransaction(txObject, (err, txHash)=>{
-            console.log("deploy contract hash: ", txHash)   
+            console.log("deployed request contract hash: ", txHash)   
 						var txh = txHash
 						//request contract address를 따로 저장
             web3.eth.getTransactionReceipt(txh).then((receipt)=>{

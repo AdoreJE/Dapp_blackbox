@@ -34,8 +34,11 @@ while True:
     a = clientSocket.connect_ex((serverName,serverPort))
     if a==0:
         try:
-            clientSocket.send(password.encode('utf-8')) 
-            clientSocket.send(generateHash(email).encode('utf-8'))     
+            # print(generateHash(email))
+            # print(password)
+            sendData = password + generateHash(email)
+            clientSocket.send(sendData.encode('utf-8')) 
+            #clientSocket.send(generateHash(email).encode('utf-8'))     
             data = clientSocket.recv(6).decode()
         except ConnectionResetError:
             # print('error')
@@ -47,6 +50,7 @@ while True:
             print(request)
             #send public key
             if request =='puKey':
+                print(myPublicKeyHex)
                 clientSocket.send(myPublicKeyHex)#66
             #send re-encryption key
             elif request =='reKey':

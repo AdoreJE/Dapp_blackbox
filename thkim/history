@@ -1,0 +1,9 @@
+
+miner.start(10)
+miner.start()
+eth.getTransactionCount(eth.accounts[3])
+eth.getTransactionCount(eth.accounts[2])
+eth.getTransactionCount(eth.accounts[4])
+eth.getTransactionCount(eth.accounts[1])
+eth.getTransactionCount(eth.accounts[0])
+eth.accounts

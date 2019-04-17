@@ -160,6 +160,7 @@ def main():
                 
                     print(lines)
                     contractAddress = lines[2][:-1]
+                    print(contractAddress)
                     #print(len(contractAddress.hex()))
 
             filename = dates+'.'+ext
@@ -186,7 +187,7 @@ def main():
             file_transfer('data/accident/'+dates+'_frame1.jpg')
             file_transfer('data/accident/'+dates+'_frame2.jpg')
             file_transfer('data/encrypt/'+ encrypted_file_name)
-            #time.sleep(1)
+            time.sleep(1)
         break
 
 main()
