@@ -262,7 +262,8 @@ router.post('/owner_yes', (request, response)=>{
 			var output = stdout.split('\n')
 			console.log(output)
 			var correctness = output[0].substring(0,7)
-			var capsule = output[3].substring(0,196)
+			var length = output[3]
+			var capsule = output[4].substring(0,length)
 			console.log(capsule)
 			console.log('stderr: ' + stderr);
 			if (error !== null) {
@@ -274,7 +275,7 @@ router.post('/owner_yes', (request, response)=>{
 				return
 			}
 		
-		requestContract.methods.setData(capsule,correctness).send({from:request.user.address, gas:200000}, (err, txHash)=>{
+		requestContract.methods.setData(capsule,correctness).send({from:request.user.address, gas:500000}, (err, txHash)=>{
       
 			var title = 'WEB - owner';
 			var html = template.HTML(title,`

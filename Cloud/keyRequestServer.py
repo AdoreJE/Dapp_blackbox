@@ -193,8 +193,12 @@ elif request[1:-1] =='reKey':
 
     for i in kfs_temp:
         kfs.append(kfrags.KFrag.from_bytes(i))
-        
-    print(kfs)
+    
+    kf=''
+    for kfrag in kfs:
+        kf  +=kfrag.to_bytes().hex()
+    print(len(kf))
+    print(kf)
 
     # #durl
     # # print('bpublickey: ', publicKey.to_bytes().hex())
