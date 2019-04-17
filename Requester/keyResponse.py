@@ -96,6 +96,9 @@ while True:
                 # time.sleep(5)
                 # time.sleep(1)
                 # clientSocket.close()
+            elif request =='trans':
+                rekey = clientSocket.recv(1024)
+                print(rekey)
         elif '0' == data[0]:
             print('incorrect')
                 

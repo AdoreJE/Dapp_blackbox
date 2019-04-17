@@ -13,6 +13,29 @@ def generateHash(pwd):
     k = sha3.keccak_256()
     k.update(pwd.encode('utf-8'))
     return k.hexdigest()
+
+def file_transfer(filepath):
+    # 9byte 파일 크기 전송
+    # 1
+    size = os.path.getsize(filepath)
+    size = str(size).encode()
+    while len(size) < 9:
+        size = b'0'+size
+    
+    print("size :", size)
+    clientSocket.send(size)
+    
+    data_transferred = 0
+    with open(filepath, 'rb') as f:
+        try:
+            data = f.read(1024)
+            while data:
+                data_transferred += clientSocket.send(data)
+                data = f.read(1024)
+        except Exception as e:
+            print(e)
+    print('전송완료[%s], 전송량[%d]' %(filepath.split('/')[2],data_transferred))
+
 '''
 class ClientThread(threading.Thread):
     def __init__(self, connectionSocket, addr, args, cipher):
@@ -70,7 +93,7 @@ parser.add_argument("--email", type=str, help="input email")
 parser.add_argument("--password", type=str, help="input password")
 parser.add_argument("--publicKey", type=str, help="input requester's publicKey", default=None)
 parser.add_argument("--evidenceContractAddress", type=str, help="input evidenceContractAddress",default="test")
-
+parser.add_argument("--rekey", type=str, help="input rekey", default=None)
 args = parser.parse_args()
 request = args.request
 # print(request)
@@ -82,6 +105,7 @@ publicKey = args.publicKey
 
 # print(publicKey)
 evidenceContractAddress = args.evidenceContractAddress
+rekey = args.rekey
 # print(evidenceContractAddress)
 conn = sqlite3.connect('../evidence.db')
 curs = conn.cursor()
@@ -189,6 +213,11 @@ elif request[1:-1] =='reKey':
     
     # cleartext =  pre.decrypt(ciphertext=bytes.fromhex(cipher.decode()), capsule=capsule, decrypting_key=myPrivateKey)
     # print(cleartext)# == plaintext
+elif request[1:-1] =='trans':
+    #encrypted file transfer
+    print(rekey)
+    connectionSocket.send(rekey.encode('utf-8'))
+    # file_transfer()
 
 #time.sleep(3)
 # connectionSocket.close()
