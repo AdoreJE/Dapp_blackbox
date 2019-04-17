@@ -97,8 +97,11 @@ while True:
                 # time.sleep(1)
                 # clientSocket.close()
             elif request =='trans':
-                rekey = clientSocket.recv(1024)
-                print(rekey)
+                data = clientSocket.recv(1024)
+                cipher = data[:120]
+                rekey = data[120:316]
+                print('cipher: ', cipher)
+                print('rekey: ', rekey)
         elif '0' == data[0]:
             print('incorrect')
                 

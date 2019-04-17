@@ -106,7 +106,7 @@ publicKey = args.publicKey
 # print(publicKey)
 evidenceContractAddress = args.evidenceContractAddress
 rekey = args.rekey
-# print(evidenceContractAddress)
+
 conn = sqlite3.connect('../evidence.db')
 curs = conn.cursor()
 curs.execute('SELECT * FROM video WHERE evidenceContractAddress=?', (evidenceContractAddress[1:-1],))
@@ -215,8 +215,10 @@ elif request[1:-1] =='reKey':
     # print(cleartext)# == plaintext
 elif request[1:-1] =='trans':
     #encrypted file transfer
+    print(cipher)
     print(rekey)
-    connectionSocket.send(rekey.encode('utf-8'))
+    data = cipher + rekey[1:-1].encode('utf-8')
+    connectionSocket.send(data)
     # file_transfer()
 
 #time.sleep(3)

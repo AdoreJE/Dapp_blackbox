@@ -378,7 +378,7 @@ router.post('/requester_process', (request, response)=>{
 		var rekey = result['_rekey']
 		var link = result['_link']
 
-		child = exec(`python ../keyRequestServer.py --request 'trans' --email '${request.user.email}' --password '${request.user.password}' --rekey '${rekey}`, function (error, stdout, stderr) {
+		child = exec(`python ../keyRequestServer.py --request 'trans' --email '${request.user.email}' --password '${request.user.password}' --rekey '${rekey}' --evidenceContractAddress '${evidenceContractAddress}'`, function (error, stdout, stderr) {
 			var output = stdout.split('\n')
 			console.log(output)
 			var correctness = output[0].substring(0,7)
@@ -412,7 +412,7 @@ router.post('/requester_process', (request, response)=>{
 									, auth.statusUI(request, response));
 			response.send(html);
 		})
-
+	})
 	// //python 실행 재암호화키와 link 받아오기
 	// 	child = exec(`python ../keyRequestServer.py --request 'reKey' --email '${request.user.email}' --password '${request.user.password}' --publicKey '${publicKey}' --evidenceContractAddress '${evidenceContractAddress}'`, function (error, stdout, stderr) {
 	// 		var output = stdout.split('\n')
