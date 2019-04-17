@@ -60,6 +60,7 @@ def file_receive(csocket, filepath):
                     break
         except Exception as e:
             print(e)
+    
     print('전송완료[%s], 전송량[%d]' %(filepath.split('/')[3],data_transferred))
 
 class VerifyThread(threading.Thread):

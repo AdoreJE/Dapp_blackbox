@@ -1,70 +1,3 @@
-# import sha3
-# import cv2
-# import glob
-# import os, sys
-# from socket import *
-# from Cipher import *
-# from umbral import pre, keys, signing, kfrags, config
-# config.set_default_curve()
-# def generateHash(pwd):
-#     k = sha3.keccak_256()
-#     k.update(pwd.encode('utf-8'))
-#     return k.hexdigest()
-
-# email = input('email: ')
-# password = input('password: ')
-# key = generateKey(password)
-
-
-# password = generateHash(password)
-
-# myPrivateKey = keys.UmbralPrivateKey.from_bytes(decrypt(key, 'static/'+email+'PrivateKey.enc'))
-# myPublicKey = myPrivateKey.get_pubkey()
-# mySigner = signing.Signer(private_key=myPrivateKey)
-# print(len(myPublicKey.to_bytes()))
-
-# serverName = '127.0.0.1'   # Set as IP address of server
-# serverPort = 15000
-# # print(len(password.encode('utf-8')))
-
-# while True:
-#     clientSocket = socket(AF_INET,SOCK_STREAM)
-#     a = clientSocket.connect_ex((serverName,serverPort))
-#     if a==0:
-#         clientSocket.send(password.encode('utf-8')) 
-#         clientSocket.send(generateHash(email).encode('utf-8'))     
-#         data = clientSocket.recv(6).decode()
-#         #신원 확인
-#         if '1' == data[0]:
-#             print('correct')
-#             request = data[1:6]
-#             print(request)
-#             #send public key
-#             if request =='puKey':
-#                 clientSocket.send(myPublicKey.to_bytes().hex().encode())#66
-#             #send re-encryption key
-#             elif request =='reKey':
-#                 data=clientSocket.recv(1024)
-#                 yourPublicKey = data[:66]
-#                 print(yourPublicKey)
-#                 cipher = data[66:126]
-#                 print(cipher)
-#                 yourPublicKey = pre.UmbralPublicKey.from_bytes(bytes.fromhex(yourPublicKey.decode()))
-#                 kfrags = pre.generate_kfrags(delegating_privkey=myPrivateKey,
-#                              signer=mySigner,
-#                              receiving_pubkey=yourPublicKey,
-#                              threshold=1,
-#                              N=1)
-                
-#                 for kfrag in kfrags:
-#                     clientSocket.send(kfrag.to_bytes())
-                
-#         elif '0' == data[0]:
-#             print('incorrect')    
-#             clientSocket.close()
-#     clientSocket.close()
-        
-
 import sha3
 import cv2
 import glob
@@ -89,6 +22,7 @@ password = generateHash(password)
 myPrivateKey = keys.UmbralPrivateKey.from_bytes(decrypt(key, 'static/'+email+'PrivateKey.enc'))
 myPublicKey = myPrivateKey.get_pubkey()
 myPublicKeyHex = myPublicKey.to_bytes().hex().encode('utf-8')
+print(myPublicKeyHex)
 mySigner = signing.Signer(private_key=myPrivateKey)
 
 
@@ -101,8 +35,11 @@ while True:
     a = clientSocket.connect_ex((serverName,serverPort))
     if a==0:
         try:
-            clientSocket.send(password.encode('utf-8')) 
-            clientSocket.send(generateHash(email).encode('utf-8'))     
+            # print(generateHash(email))
+            # print(password)
+            sendData = password + generateHash(email)
+            clientSocket.send(sendData.encode('utf-8')) 
+            #clientSocket.send(generateHash(email).encode('utf-8'))     
             data = clientSocket.recv(6).decode()
         except ConnectionResetError:
             # print('error')
@@ -114,6 +51,7 @@ while True:
             print(request)
             #send public key
             if request =='puKey':
+                print(myPublicKeyHex)
                 clientSocket.send(myPublicKeyHex)#66
             #send re-encryption key
             elif request =='reKey':
