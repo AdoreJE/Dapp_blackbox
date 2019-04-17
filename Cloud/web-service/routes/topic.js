@@ -137,7 +137,11 @@ router.post('/search_request', function (request, response) {
 						//request contract address를 따로 저장
             web3.eth.getTransactionReceipt(txh).then((receipt)=>{
                 console.log('receipt : ', receipt)
-                const requestContract = new web3.eth.Contract(MyConstant.RequestABI, receipt.contractAddress)
+								const requestContract = new web3.eth.Contract(MyConstant.RequestABI, receipt.contractAddress)
+								
+								//dbㅇㅔ 저장
+
+								db.run('INSERT INTO requestContract VALUES(?, ?, ?);', (request.user.address, receipt.contractAddress, evidenceContractAddress))
 				requestContract.methods.requestVideo(MyConstant.ResponseAddress, evidenceContractAddress, requesterPublicKey).send(
 					{
 						from : requesterAccountAddress,
