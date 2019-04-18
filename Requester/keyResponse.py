@@ -53,7 +53,7 @@ def file_receive(csocket, filepath):
         except Exception as e:
             print(e)
     
-    print('전송완료[%s], 전송량[%d]' %(filepath.split('/')[3],data_transferred))
+    print('전송완료[%s], 전송량[%d]' %(filepath.split('/')[1],data_transferred))
 
 
 
@@ -180,7 +180,8 @@ while True:
                 cleartext =  pre.decrypt(ciphertext=bytes.fromhex(cipher.decode()), capsule=capsule, decrypting_key=myPrivateKey)
                 print(cleartext)# == plaintext
 
-                file_receive(clientSocket, './')
+                file_receive(clientSocket, './'+evidenceContractAddress.decode() + '.aes')
+                #복호화
         elif '0' == data[0]:
             print('incorrect')
                 

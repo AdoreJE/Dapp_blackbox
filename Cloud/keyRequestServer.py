@@ -236,7 +236,7 @@ elif request[1:-1] =='trans':
     data = cipher + capsule + ownerPublicKey[1:-1].encode('utf-8') + evidenceContractAddress[1:-1].encode('utf-8') + trans_kfs.encode('utf-8')
     connectionSocket.send(data)
     # file_transfer()
-    file_transfer(connectionSocket, './public/video/'+evidenceContractAddress+'.aes')
+    file_transfer(connectionSocket, 'C:/Dapp_blackbox/Cloud/web-service/public/video/'+evidenceContractAddress[1:-1]+'.aes')
 #time.sleep(3)
 # connectionSocket.close()
 # print('server closed', time.time())
