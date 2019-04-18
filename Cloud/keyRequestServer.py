@@ -14,7 +14,7 @@ def generateHash(pwd):
     k.update(pwd.encode('utf-8'))
     return k.hexdigest()
 
-def file_transfer(filepath):
+def file_transfer(clientSocket,filepath):
     # 9byte 파일 크기 전송
     # 1
     size = os.path.getsize(filepath)
@@ -93,7 +93,8 @@ parser.add_argument("--email", type=str, help="input email")
 parser.add_argument("--password", type=str, help="input password")
 parser.add_argument("--publicKey", type=str, help="input requester's publicKey", default=None)
 parser.add_argument("--evidenceContractAddress", type=str, help="input evidenceContractAddress",default="test")
-parser.add_argument("--rekey", type=str, help="input rekey", default=None)
+parser.add_argument("--ownerPublicKey", type=str, help="input ownerPublicKey", default=None)
+parser.add_argument("--requestContractAddress", type=str, help="input requestContractAddress",default="test")
 args = parser.parse_args()
 request = args.request
 # print(request)
@@ -105,8 +106,8 @@ publicKey = args.publicKey
 
 # print(publicKey)
 evidenceContractAddress = args.evidenceContractAddress
-rekey = args.rekey
-
+ownerPublicKey = args.ownerPublicKey
+requestContractAddress = args.requestContractAddress
 conn = sqlite3.connect('../evidence.db')
 curs = conn.cursor()
 curs.execute('SELECT * FROM video WHERE evidenceContractAddress=?', (evidenceContractAddress[1:-1],))
@@ -119,6 +120,11 @@ if len(rows) != 0:
     capsule = rows[0][4]
     # print(capsule)
 
+curs.execute('SELECT * FROM requesterInfo WHERE requestContractAddress=?', (requestContractAddress[1:-1],))
+rows = curs.fetchall()
+trasn_kfs=''
+if len(rows) !=0:
+    trasn_kfs = [0][2]
 
 serverPort = 15000
 serverSocket = socket(AF_INET, SOCK_STREAM)
@@ -223,8 +229,9 @@ elif request[1:-1] =='trans':
     #encrypted file transfer
     print(cipher)
     print(capsule)
-    print(rekey)
-    data = cipher + capsule + rekey[1:-1].encode('utf-8')
+    print(ownerPublicKey)
+    print(trasn_kfs)
+    data = cipher + capsule + ownerPublicKey + trasn_kfs
     connectionSocket.send(data)
     # file_transfer()
 

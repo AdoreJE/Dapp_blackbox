@@ -252,7 +252,7 @@ router.post('/owner_yes', (request, response)=>{
 		
 		var evidenceContractAddress = post.evidenceContractAddress
     console.log('requestContractAddr: ', requestContractAddress)
-		console.log('publickKey: ', publicKey)
+		console.log('publickKey: ', publicKey) //requester
 		console.log('evidenceContractAddress: ', evidenceContractAddress)
 		
 		
@@ -262,9 +262,10 @@ router.post('/owner_yes', (request, response)=>{
 			var output = stdout.split('\n')
 			console.log(output)
 			var correctness = output[0].substring(0,7)
+			var ownerPublicKey = output[2].substring(0,66)
 			var length = output[3]
-			var capsule = output[4].substring(0,length)
-			console.log(capsule)
+			var kfrags = output[4].substring(0,length)
+			console.log(kfrags)
 			console.log('stderr: ' + stderr);
 			if (error !== null) {
 					console.log('exec error: ' + error);
@@ -274,8 +275,10 @@ router.post('/owner_yes', (request, response)=>{
 				response.redirect('/topic/owner')
 				return
 			}
-		
-		requestContract.methods.setData(capsule,correctness).send({from:request.user.address, gas:500000}, (err, txHash)=>{
+		//db에 저장
+		db.all('INSERT INTO requesterInfo VALUES (?, ?, ?);', [requestContractAddress, ownerPublicKey, kfrags])
+
+		requestContract.methods.setData(ownerPublicKey,correctness).send({from:request.user.address, gas:500000}, (err, txHash)=>{
       
 			var title = 'WEB - owner';
 			var html = template.HTML(title,`
@@ -376,10 +379,10 @@ router.post('/requester_process', (request, response)=>{
 		
 		requestContract = new web3.eth.Contract(MyConstant.RequestABI, requestContractAddress)
 		requestContract.methods.getReKey().call({from:request.user.address}, (err, result)=>{
-		var rekey = result['_rekey']
+		var ownerPublicKey = result['_rekey']
 		var link = result['_link']
 
-		child = exec(`python ../keyRequestServer.py --request 'trans' --email '${request.user.email}' --password '${request.user.password}' --rekey '${rekey}' --evidenceContractAddress '${evidenceContractAddress}'`, function (error, stdout, stderr) {
+		child = exec(`python ../keyRequestServer.py --request 'trans' --email '${request.user.email}' --password '${request.user.password}' --ownerPublicKey '${ownerPublicKey}' --requestContractAddress '${requestContractAddress}'`, function (error, stdout, stderr) {
 			var output = stdout.split('\n')
 			console.log(output)
 			var correctness = output[0].substring(0,7)
@@ -397,7 +400,7 @@ router.post('/requester_process', (request, response)=>{
 				console.log('exec error: ' + error);
 			}
 		
-
+			//파일 다운로드?
 
 
 		//console.log('body: ', body)   

@@ -100,16 +100,36 @@ while True:
                 data = clientSocket.recv(2048)
                 cipher = data[:120]
                 capsule = data[120:316]
-                rekey = data[316:]
+                ownerPublicKey[316:382]
+                trans_kfs = data[382:]
 
                 print('cipher: ', cipher)
                 print('capsule: ', capsule)
-                print('rekey: ', rekey)
+                print('ownerPublicKey: ', ownerPublicKey)
+                print('trans_kfs: ', trans_kfs)
                 capsule = pre.Capsule.from_bytes(bytes.fromhex(capsule.decode()), params = myPublicKey.params)  
                 
-                kfrag = kfrags.KFrag.from_bytes(rekey)
-                cfrag = pre.reencrypt(kfrag, capsule)
-                capsule.attach_cfrag(cfrag)
+                kfs = list()
+                kfs_temp = list()
+                for i in range(0,1):
+                    kfs_temp.append(bytes.fromhex(trans_kfs.decode()))
+
+                for i in kfs_temp:
+                    kfs.append(kfrags.KFrag.from_bytes(i))
+                ownerPublicKey = keys.UmbralPublicKey.from_bytes(bytes.fromhex(ownerPublicKey))
+                capsule.set_correctness_keys(delegating=ownerPublicKey,
+                                    receiving=myPublicKey,
+                                    verifying=ownerPublicKey)
+
+                # print(capsule)
+                # print(kfs)
+                cfrags = list()           # Bob's cfrag collection
+                for kfrag in kfs:
+                    cfrag = pre.reencrypt(kfrag, capsule)
+                    cfrags.append(cfrag)
+
+                for cfrag in cfrags:
+                    capsule.attach_cfrag(cfrag)
                 cleartext =  pre.decrypt(ciphertext=bytes.fromhex(cipher.decode()), capsule=capsule, decrypting_key=myPrivateKey)
                 print(cleartext)# == plaintext
 
