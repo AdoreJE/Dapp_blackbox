@@ -382,7 +382,7 @@ router.post('/requester_process', (request, response)=>{
 		var ownerPublicKey = result['_rekey']
 		var link = result['_link']
 
-		child = exec(`python ../keyRequestServer.py --request 'trans' --email '${request.user.email}' --password '${request.user.password}' --ownerPublicKey '${ownerPublicKey}' --requestContractAddress '${requestContractAddress}'`, function (error, stdout, stderr) {
+		child = exec(`python ../keyRequestServer.py --request 'trans' --email '${request.user.email}' --password '${request.user.password}' --ownerPublicKey '${ownerPublicKey}' --requestContractAddress '${requestContractAddress}' --evidenceContractAddress '${evidenceContractAddress}'`, function (error, stdout, stderr) {
 			var output = stdout.split('\n')
 			console.log(output)
 			var correctness = output[0].substring(0,7)
@@ -406,7 +406,7 @@ router.post('/requester_process', (request, response)=>{
 		//console.log('body: ', body)   
 		var title = 'WEB - owner';
 		var html = template.HTML(title,`
-									<p>rekey : ${rekey}</p>
+									<p>rekey : ${ownerPublicKey}</p>
 									<p>link : ${link}</p>
 								`, `
 									<p><a href="/topic/search">search</a></p>

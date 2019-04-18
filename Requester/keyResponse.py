@@ -100,7 +100,7 @@ while True:
                 data = clientSocket.recv(2048)
                 cipher = data[:120]
                 capsule = data[120:316]
-                ownerPublicKey[316:382]
+                ownerPublicKey = data[316:382]
                 trans_kfs = data[382:]
 
                 print('cipher: ', cipher)

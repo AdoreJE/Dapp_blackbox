@@ -122,9 +122,9 @@ if len(rows) != 0:
 
 curs.execute('SELECT * FROM requesterInfo WHERE requestContractAddress=?', (requestContractAddress[1:-1],))
 rows = curs.fetchall()
-trasn_kfs=''
+trans_kfs=''
 if len(rows) !=0:
-    trasn_kfs = [0][2]
+    trans_kfs = rows[0][2]
 
 serverPort = 15000
 serverSocket = socket(AF_INET, SOCK_STREAM)
@@ -230,9 +230,9 @@ elif request[1:-1] =='trans':
     print(cipher)
     print(capsule)
     print(ownerPublicKey)
-    print(trasn_kfs)
-    data = cipher + capsule + ownerPublicKey + trasn_kfs
-    connectionSocket.send(data)
+    print(trans_kfs)
+    data = cipher + capsule + ownerPublicKey + trans_kfs
+    connectionSocket.send(data.encode('utf-8'))
     # file_transfer()
 
 #time.sleep(3)
