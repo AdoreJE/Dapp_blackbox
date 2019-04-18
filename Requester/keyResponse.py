@@ -113,9 +113,10 @@ while True:
                 kfs_temp = list()
                 for i in range(0,1):
                     kfs_temp.append(bytes.fromhex(trans_kfs.decode()))
-
+                print(kfs_temp)
                 for i in kfs_temp:
                     kfs.append(kfrags.KFrag.from_bytes(i))
+
                 ownerPublicKey = keys.UmbralPublicKey.from_bytes(bytes.fromhex(ownerPublicKey))
                 capsule.set_correctness_keys(delegating=ownerPublicKey,
                                     receiving=myPublicKey,
