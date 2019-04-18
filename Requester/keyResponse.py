@@ -12,6 +12,51 @@ def generateHash(pwd):
     k.update(pwd.encode('utf-8'))
     return k.hexdigest()
 
+def file_receive(csocket, filepath):
+    size = csocket.recv(9)
+    
+    size = int(size.decode())
+    print('size: ', size)
+    #암호화된 영상 데이터
+    data_transferred = 0
+    unit = 1024
+    with open(filepath, 'wb') as f:
+        try:
+            while True:
+                if unit > size:
+                    data = csocket.recv(size)
+                    data_transferred += f.write(data)
+                    
+                    print('1')
+                    break
+                
+                #data_transferred += unit
+                
+                if data_transferred + unit < size:
+                    data = csocket.recv(unit)
+                    data_transferred+=f.write(data)
+                elif data_transferred == size:
+                    data = csocket.recv(unit)
+                    data_transferred+=f.write(data)
+                    print('2')
+                    break
+                else:
+                    
+                    data = csocket.recv(size%data_transferred)
+                    
+                    c=f.write(data)
+                    # print(c)
+                    data_transferred+=c
+                    #data_transferred = data_transferred - unit
+                    # print('3')
+                    break
+        except Exception as e:
+            print(e)
+    
+    print('전송완료[%s], 전송량[%d]' %(filepath.split('/')[3],data_transferred))
+
+
+
 email = input('email: ')
 password = input('password: ')
 key = generateKey(password)
@@ -101,7 +146,8 @@ while True:
                 cipher = data[:120]
                 capsule = data[120:316]
                 ownerPublicKey = data[316:382]
-                trans_kfs = data[382:900]
+                evidenceContractAddress = data[382:424]
+                trans_kfs = data[424:942]
 
                 print('cipher: ', cipher)
                 print('capsule: ', capsule)
@@ -134,6 +180,7 @@ while True:
                 cleartext =  pre.decrypt(ciphertext=bytes.fromhex(cipher.decode()), capsule=capsule, decrypting_key=myPrivateKey)
                 print(cleartext)# == plaintext
 
+                file_receive(clientSocket, './')
         elif '0' == data[0]:
             print('incorrect')
                 
