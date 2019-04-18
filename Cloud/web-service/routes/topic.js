@@ -262,7 +262,7 @@ router.post('/owner_yes', (request, response)=>{
 			var output = stdout.split('\n')
 			console.log(output)
 			var correctness = output[0].substring(0,7)
-			var ownerPublicKey = output[2].substring(2,66)
+			var ownerPublicKey = output[2].substring(0,66)
 			console.log(ownerPublicKey)
 			var length = output[3]
 			var kfrags = output[4].substring(0,length)

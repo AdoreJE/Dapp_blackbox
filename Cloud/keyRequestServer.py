@@ -179,7 +179,7 @@ elif request[1:-1] =='reKey':
     connectionSocket.send(publicKey[1:-1].encode())
     
     ownerPublicKey = connectionSocket.recv(66)
-    print(ownerPublicKey)
+    print(ownerPublicKey.decode())
     # time.sleep(1)
     # print(ownerPublicKey)
     # print(time.time())
