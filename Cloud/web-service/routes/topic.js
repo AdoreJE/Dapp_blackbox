@@ -262,7 +262,8 @@ router.post('/owner_yes', (request, response)=>{
 			var output = stdout.split('\n')
 			console.log(output)
 			var correctness = output[0].substring(0,7)
-			var ownerPublicKey = output[2].substring(0,66)
+			var ownerPublicKey = output[2].substring(2,66)
+			console.log(ownerPublicKey)
 			var length = output[3]
 			var kfrags = output[4].substring(0,length)
 			console.log(kfrags)
@@ -380,6 +381,7 @@ router.post('/requester_process', (request, response)=>{
 		requestContract = new web3.eth.Contract(MyConstant.RequestABI, requestContractAddress)
 		requestContract.methods.getReKey().call({from:request.user.address}, (err, result)=>{
 		var ownerPublicKey = result['_rekey']
+		console.log(ownerPublicKey)
 		var link = result['_link']
 
 		child = exec(`python ../keyRequestServer.py --request 'trans' --email '${request.user.email}' --password '${request.user.password}' --ownerPublicKey '${ownerPublicKey}' --requestContractAddress '${requestContractAddress}' --evidenceContractAddress '${evidenceContractAddress}'`, function (error, stdout, stderr) {

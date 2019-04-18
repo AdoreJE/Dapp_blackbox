@@ -97,11 +97,11 @@ while True:
                 # time.sleep(1)
                 # clientSocket.close()
             elif request =='trans':
-                data = clientSocket.recv(2048)
+                data = clientSocket.recv(900)
                 cipher = data[:120]
                 capsule = data[120:316]
                 ownerPublicKey = data[316:382]
-                trans_kfs = data[382:]
+                trans_kfs = data[382:900]
 
                 print('cipher: ', cipher)
                 print('capsule: ', capsule)

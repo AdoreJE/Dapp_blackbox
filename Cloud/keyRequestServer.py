@@ -229,10 +229,11 @@ elif request[1:-1] =='trans':
     #encrypted file transfer
     print(cipher)
     print(capsule)
-    print(ownerPublicKey)
+    print(ownerPublicKey[1:-1])
     print(trans_kfs)
-    data = cipher + capsule + ownerPublicKey + trans_kfs
-    connectionSocket.send(data.encode('utf-8'))
+    print(len(trans_kfs))
+    data = cipher + capsule + ownerPublicKey[1:-1].encode('utf-8') + trans_kfs.encode('utf-8')
+    connectionSocket.send(data)
     # file_transfer()
 
 #time.sleep(3)
