@@ -19,7 +19,6 @@ web3.eth.getTransactionCount(dashcamAddress, (err, txCount)=>{
         nonce : web3.utils.toHex(txCount),
         gasLimit: web3.utils.toHex(1000000),
         gasPrice: web3.utils.toHex(web3.utils.toWei('10', 'gwei')),
-
         data : data
     }
     //Sign the transaction
