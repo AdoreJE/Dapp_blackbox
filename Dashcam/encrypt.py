@@ -3,7 +3,6 @@ import binascii
 import os
 from Crypto.Cipher import AES
 
-
 def decrypt_file(key, in_filename, out_filename, chunksize=24 * 1024):
     with open(in_filename, 'rb') as infile:
         origsize = struct.unpack('<Q', infile.read(struct.calcsize('Q')))[0]
@@ -16,7 +15,6 @@ def decrypt_file(key, in_filename, out_filename, chunksize=24 * 1024):
                     break
                 outfile.write(decryptor.decrypt(chunk))
             outfile.truncate(origsize)
-
 
 def encrypt_file(key, in_filename, out_filename=None, chunksize=65536):
     if not out_filename:
@@ -36,12 +34,9 @@ def encrypt_file(key, in_filename, out_filename=None, chunksize=65536):
                     chunk += b' ' * (16 - len(chunk) % 16)
                 outfile.write(encryptor.encrypt(chunk))
 
-
 def make_pass():
     timekey = int(time.time())
     return str(timekey).encode('utf-8')
-
-
 
 def main():
     password = make_pass()

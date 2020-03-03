@@ -4,24 +4,21 @@ import "./Response.sol";
 
 contract Request{
     Evidence evid;
-    
     address requester;
     int rekey;
     int link;
-    
-    
     int puk;
-    address evidAddr;    
+    address evidAddr;
     
     constructor() public{
         requester = msg.sender;
     }
     
-    function requestVideo(Response REP, address _evidAddr, int _puk) public{
+    function requestVideo(Response RESP, address _evidAddr, int _puk) public{
         puk = _puk;
-        evidAddr=_evidAddr;
+        evidAddr = _evidAddr;
         evid = Evidence(evidAddr);
-        REP.set(address(this), _evidAddr);
+        RESP.set(address(this), _evidAddr);
     }
     
     function setData(int _rekey, int _link) public{
@@ -38,6 +35,5 @@ contract Request{
     function getData() public view returns(address _evidAddr,int _puk){
         return (evidAddr, puk);
     }
-    
 }
 

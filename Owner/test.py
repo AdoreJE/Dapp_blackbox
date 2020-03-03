@@ -14,7 +14,6 @@ email = input('email: ')
 password = input('password: ')
 key = generateKey(password)
 
-
 password = generateHash(password)
 
 myPrivateKey = keys.UmbralPrivateKey.from_bytes(decrypt(key, 'static/'+email+'PrivateKey.enc'))

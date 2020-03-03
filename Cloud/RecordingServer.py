@@ -61,7 +61,6 @@ serverSocket = socket(AF_INET, SOCK_STREAM)
 serverSocket.bind((host, serverPort))
 serverSocket.listen(1)
 
-
 print("Server started")
 print("Waiting for client request..")
 while True:

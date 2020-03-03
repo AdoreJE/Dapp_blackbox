@@ -16,7 +16,6 @@ contract Evidence{
         time = _time;
         location = _location;
         isVerified = false;
-        
     }
     function getOwner() public view returns(address _owner){
         return (owner);
@@ -30,5 +29,4 @@ contract Evidence{
             s.setEvidence(address(this), time, location);
         }
     }
-    
 }

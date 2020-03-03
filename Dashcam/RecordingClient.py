@@ -31,7 +31,6 @@ password = input('password: ')
 f = open('static/'+email+'AccountInfo.txt', 'r')
 accountAddress = f.read()
 
-
 key = generateKey(password)
 private_key = keys.UmbralPrivateKey.from_bytes(decrypt(key, 'static/'+email+'PrivateKey.enc'))
 public_key = private_key.get_pubkey()
@@ -45,7 +44,6 @@ serverName = '155.230.16.117'   # Set as IP address of server
 serverPort = 12000
 clientSocket = socket(AF_INET,SOCK_STREAM)
 clientSocket.connect((serverName,serverPort))
-
 
 def get_file_name(video_path):
     parts = video_path.split(os.path.sep)
@@ -66,9 +64,7 @@ def hash_function(data):
     k.update(data)
     return k.hexdigest()
 
-
 H=[hash_function(accountAddress.encode('utf-8')),'']
-
 
 clientSocket.send(accountAddress.encode('utf-8'))   ###ID 전송
 c = clientSocket.recv(1024)
@@ -119,10 +115,5 @@ while True:
         rename_file(video_path)
         H[0] = H[1]
         c+=1
-        
-        
-     
-clientSocket.close()
-        
-       
 
+clientSocket.close()

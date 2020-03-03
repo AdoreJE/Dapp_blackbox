@@ -16,7 +16,6 @@ email = input('email: ')
 password = input('password: ')
 key = generateKey(password)
 
-
 password = generateHash(password)
 
 myPrivateKey = keys.UmbralPrivateKey.from_bytes(decrypt(key, 'static/'+email+'PrivateKey.enc'))
@@ -24,7 +23,6 @@ myPublicKey = myPrivateKey.get_pubkey()
 myPublicKeyHex = myPublicKey.to_bytes().hex().encode('utf-8')
 print(myPublicKeyHex)
 mySigner = signing.Signer(private_key=myPrivateKey)
-
 
 serverName = '155.230.16.117'   # Set as IP address of server
 serverPort = 15000
@@ -142,5 +140,3 @@ while True:
         clientSocket.close()
     #print('close')
     # clientSocket.close()
-        
-

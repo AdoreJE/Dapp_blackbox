@@ -3,7 +3,6 @@ var MyConstant = require('../../Constant/constant.js')
 web3 = new Web3(new Web3.providers.HttpProvider("http://155.230.16.117:7545"))
 var db = require('./lib/db.js');
 
-
 //const cloudAddr = db.get('cloud').value()[0].cloudAddr
 const cloudAddr = MyConstant.cloudAddr
 web3.eth.getTransactionCount(cloudAddr, (err, txCount)=>{
@@ -20,13 +19,12 @@ web3.eth.getTransactionCount(cloudAddr, (err, txCount)=>{
     web3.eth.sendTransaction(txObject, (err, txHash)=>{
         console.log("deployed contract Tx hash: ", txHash)  
         
-       // setTimeout(function() {
-           web3.eth.getTransactionReceipt(txHash).then((receipt)=>{
-            
+        // setTimeout(function() {
+        web3.eth.getTransactionReceipt(txHash).then((receipt)=>{
             contractAddr = receipt.contractAddress
             console.log('receipt : ', contractAddr)
             return
-          })
+        })
       //  }, 5000);
         // return
     })

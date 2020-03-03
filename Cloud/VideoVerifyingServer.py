@@ -4,6 +4,7 @@ import sqlite3
 import os
 import threading
 import time
+
 def parse_data(evid):
     accountAddress = evid[:42]  #42
     filename=evid[42:63] #21
@@ -12,8 +13,6 @@ def parse_data(evid):
     contractAddress = evid[379:421] #42
     accountAddress = accountAddress.decode()
     filename = filename.decode()
-   
-  
     contractAddress = contractAddress.decode()
 
     # filename = bytes.fromhex(filename.decode()).decode()
@@ -29,7 +28,6 @@ def hash_function(data):
 
 def file_receive(csocket, filepath):
     size = csocket.recv(9)
-    
     size = int(size.decode())
     print('size: ', size)
     #암호화된 영상 데이터
@@ -41,12 +39,9 @@ def file_receive(csocket, filepath):
                 if unit > size:
                     data = csocket.recv(size)
                     data_transferred += f.write(data)
-                    
                     print('1')
                     break
-                
                 #data_transferred += unit
-                
                 if data_transferred + unit < size:
                     data = csocket.recv(unit)
                     data_transferred+=f.write(data)
@@ -56,9 +51,7 @@ def file_receive(csocket, filepath):
                     print('2')
                     break
                 else:
-                    
                     data = csocket.recv(size%data_transferred)
-                    
                     c=f.write(data)
                     # print(c)
                     data_transferred+=c
@@ -80,6 +73,7 @@ class VerifyThread(threading.Thread):
         self.capsule = capsule
         self.conn = sqlite3.connect('./evidence.db', check_same_thread=False)
         self.curs = self.conn.cursor()
+
     def run(self):
         print('verify the contract')
         #검증 수행
@@ -111,7 +105,6 @@ class VerifyThread(threading.Thread):
             self.curs.execute('INSERT INTO video VALUES(?, ?, ?, ?, ?);', (self.accountAddress, self.filename, self.contractAddress, self.cipher, self.capsule))
             self.conn.commit()
 
-
 class ClientThread(threading.Thread):
     def __init__(self,clientAddress,clientsocket):
         threading.Thread.__init__(self)
@@ -123,7 +116,6 @@ class ClientThread(threading.Thread):
             if len(evid) == 0:
                 continue
             #db에 저장할 데이터 받아오기
-            
             accountAddress, filename, cipher, capsule, contractAddress= parse_data(evid)
             print("-"*64)
             print("accountAddress: ", accountAddress)
@@ -138,7 +130,6 @@ class ClientThread(threading.Thread):
             newthread.start()
             time.sleep(3)
             
-
 def main():
     host = "155.230.16.117"
     serverPort = 14000

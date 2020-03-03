@@ -11,7 +11,6 @@ var Web3 = require("web3");
 var MyConstant= require('../Constant/constant.js')
 web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"));
 
-
 const cloudAddress = MyConstant.cloudAddress
 const cloudPrivateKey = MyConstant.cloudPrivateKey
 const SearchContract = new web3.eth.Contract(MyConstant.SearchABI, MyConstant.SearchAddress)
@@ -23,24 +22,23 @@ app.get('/', (req,res)=>{
  var template = `
  <!doctype html>
  <html>
- <head>
-   <title>Search</title>
-   <meta charset="utf-8">
- </head>
+  <head>
+    <title>Search</title>
+    <meta charset="utf-8">
+  </head>
  
- <body>
-   <a href="/login">login</a>
-   <h1><a href="index.html">WEB</a></h1>
-   <form action="/search" method="get">
-     <p><input type="text" name="time" placeholder="time"></p>
-     <p><input type="text" name="location" placeholder="location"></p>
+  <body>
+    <a href="/login">login</a>
+    <h1><a href="index.html">WEB</a></h1>
+    <form action="/search" method="get">
+      <p><input type="text" name="time" placeholder="time"></p>
+      <p><input type="text" name="location" placeholder="location"></p>
      
-     <p>
-       <input type="submit">
-     </p>
-   </form>
-   </p>
- </body>
+      <p>
+        <input type="submit">
+      </p>
+    </form>
+  </body>
  </html>
  `
   res.send(template)
@@ -51,7 +49,6 @@ app.get('/', (req,res)=>{
 app.get('/login', function (request, response) {
  
   var title = 'WEB - login';
-  
   var html = `
     <div style="color:red;">Login</div>
     <form action="/auth/login_process" method="post">
@@ -84,18 +81,14 @@ app.get('/search',(req,res)=>{
           console.log(`${i}th evidence contract addr: ${addr[i]}`)
         }
         res.send(html+`<script src="button.js"></script>`)
-        
     })
     // var html = loadImage('1.jpg', '2.jpg')
-    // res.send(html)
-    
-    
+    // res.send(html) 
 })
 
 app.listen(3000,()=>{
 
 })
-
 
 function loadImage(image1, image2, i){
   var html = `
@@ -135,8 +128,6 @@ app.get('/clicked', (req, res) => {
     }
     console.log(`stdout: ${stdout}`);
     console.log(`stderr: ${stderr}`);
-    
-    
   })
   res.send(req.query.id)
   
@@ -152,7 +143,6 @@ app.get('/check', (req, res)=>{
 `
     for(var i = 0;i<result.length;i++){
       html += `
-      
       <p>${result[i]}
       <a href="checkVideo?address=${result[i]}">
       <input type="button" value="영상확인" onclick="movepage1()"></a>
@@ -184,7 +174,6 @@ app.get("/checkVideo", (req,res)=>{
     <div style="width:400px; height:200px;  float:left">
       <img src = "${image2}" style="width:399px; "/>
     </div>`
-    
     res.send(html)
   })
   

@@ -20,6 +20,7 @@ web3 = new Web3(new Web3.providers.HttpProvider("http://155.230.16.117:7545"))
 var exec = require('child_process').exec,
     child;
 
+// 시간, 위치를 입력하여 영상 검색
 router.get('/search', function (request, response) {
 	if (!auth.isOwner(request, response)) {
 		response.redirect('/');
@@ -43,6 +44,7 @@ router.get('/search', function (request, response) {
   	response.send(html);
 });
 
+// 시간과 위치를 기반으로 DB에서 해당되는 영상을 검색
 router.post('/search_process', function (request, response) {
  	if (!auth.isOwner(request, response)) {
 		response.redirect('/');
@@ -58,7 +60,7 @@ router.post('/search_process', function (request, response) {
 		console.log(row)
 		var body=''
     
-		for(var i = 0;i<row.length;i++){
+		for (var i = 0;i<row.length;i++) {
 			evidenceContractAddress[i] = row[i].evidenceContractAddress
 			body+=loadImage(`/frame/${evidenceContractAddress[i]}_frame1.jpg`, 
 							`/frame/${evidenceContractAddress[i]}_frame2.jpg`,
@@ -73,12 +75,12 @@ router.post('/search_process', function (request, response) {
 								<p><a href="/topic/owner">owner</a></p>
 								<p><a href="/topic/requester">requester</a><p>`,
       							auth.statusUI(request, response)
-    							);
+    	);
     	response.send(html);
   	})
 });
 
-//블록체인 수행 부분
+//블록체인 수행 부분, 영상 요청
 router.post('/search_request', function (request, response) {
 	if (!auth.isOwner(request, response)) {
 		response.redirect('/');
@@ -97,7 +99,8 @@ router.post('/search_request', function (request, response) {
 								<p><a href="/topic/requester">requester</a><p>
 							`,
 							auth.statusUI(request, response)
-						);
+	);
+
 	//request requester's public key
 	child = exec(`python ../keyRequestServer.py --request 'puKey' --email '${request.user.email}' --password '${request.user.password}'`, function (error, stdout, stderr) {
 		var output = stdout.split('\n')
@@ -117,43 +120,40 @@ router.post('/search_request', function (request, response) {
 			console.log('exec error: ' + error);
 		}
 	
-
-
       //request contract
-	var requesterAccountAddress = request.user.address
-	web3.eth.getTransactionCount(requesterAccountAddress, (err, txCount)=>{
-        const data = MyConstant.RequestData
-        const txObject = {
-            from : requesterAccountAddress,
-            nonce : web3.utils.toHex(txCount),
-            gasLimit : web3.utils.toHex(1000000),
-            gasPrice : web3.utils.toHex(web3.utils.toWei('10', 'gwei')),
-            data : data
-        }
+		var requesterAccountAddress = request.user.address
+		web3.eth.getTransactionCount(requesterAccountAddress, (err, txCount)=>{
+			const data = MyConstant.RequestData
+			const txObject = {
+				from : requesterAccountAddress,
+				nonce : web3.utils.toHex(txCount),
+				gasLimit : web3.utils.toHex(1000000),
+				gasPrice : web3.utils.toHex(web3.utils.toWei('10', 'gwei')),
+				data : data
+			}
 
-        web3.eth.sendTransaction(txObject, (err, txHash)=>{
-            console.log("deployed request contract hash: ", txHash)   
-						var txh = txHash
-						//request contract address를 따로 저장
-            web3.eth.getTransactionReceipt(txh).then((receipt)=>{
-                console.log('receipt : ', receipt)
-								const requestContract = new web3.eth.Contract(MyConstant.RequestABI, receipt.contractAddress)
-								
-								//dbㅇㅔ 저장
-								
-								db.all('INSERT INTO requestContract VALUES (?, ?, ?);', [request.user.address, receipt.contractAddress, evidenceContractAddress])
-				requestContract.methods.requestVideo(MyConstant.ResponseAddress, evidenceContractAddress, requesterPublicKey).send(
-					{
-						from : requesterAccountAddress,
-						gas:1000000
-                	}, (err, result)=>{
-												console.log("requestVideo txHash: ", result)
-												response.send(html);
-												return
-                		})
-			})
+        	web3.eth.sendTransaction(txObject, (err, txHash)=>{
+            	console.log("deployed request contract hash: ", txHash)   
+				var txh = txHash
+				
+				//request contract address를 따로 저장
+            	web3.eth.getTransactionReceipt(txh).then((receipt)=>{
+                	console.log('receipt : ', receipt)
+					const requestContract = new web3.eth.Contract(MyConstant.RequestABI, receipt.contractAddress)
+					//db에 저장
+					db.all('INSERT INTO requestContract VALUES (?, ?, ?);', [request.user.address, receipt.contractAddress, evidenceContractAddress])
+					requestContract.methods.requestVideo(MyConstant.ResponseAddress, evidenceContractAddress, requesterPublicKey).send(
+						{
+							from : requesterAccountAddress,
+							gas:1000000
+						}, (err, result)=>{
+							console.log("requestVideo txHash: ", result)
+							response.send(html);
+							return
+						}
+					)
+				})
             
-
             // setTimeout(function() {
             //   return web3.eth.getTransactionReceipt(txh).then((receipt)=>{
             //     console.log('receipt : ', receipt)
@@ -169,12 +169,13 @@ router.post('/search_request', function (request, response) {
             //   })
             // }, 3000);
             return
-        })
+        	})
 		})
 	})
   	
 });
 
+// owner가 자신의 영상에 대한 요청이 있는지 확인
 router.get('/owner', function (request, response) {
 	if (!auth.isOwner(request, response)) {
 		response.redirect('/');
@@ -189,32 +190,28 @@ router.get('/owner', function (request, response) {
 async function awaitGetData(request, response, result){
 	console.log('awaitGetData run')
 	var body = await requestGetData(request, result)
-  // console.log('body: ', body) 
+  	//console.log('body: ', body) 
 	var title = 'WEB - owner';
 	var html = template.HTML(title,`
-							${body}
-							
-  <script>
-  function fetchPage(name){
-
-	fetch(name).then(function(response){
-		response.text().then(function(text){
-			document.getElementById('aaa').innerHTML = text;
-		})
-	  });
-	 // window.location.reload()
-}
-
-
-
-
-  </script>
-							`, `
+							${body}						
+							<script>
+							function fetchPage(name){
+								fetch(name).then(function(response){
+									response.text().then(function(text){
+										document.getElementById('aaa').innerHTML = text;
+									})
+								});
+								// window.location.reload()
+							}
+  							</script>
+							`, 
+							`
 								<p><a href="/topic/search">search</a></p>
 								<p><a href="/topic/owner">owner</a></p>
 								<p><a href="/topic/requester">requester</a><p>
 							`
-							, auth.statusUI(request, response));
+							, auth.statusUI(request, response)
+	);
    	response.send(html); 
 }
 
@@ -224,7 +221,7 @@ async function requestGetData(request, result, body){
 	for(var i = 0;i<result.length;i++){
 		requestContractAddress = result[i]
 		requestContract = new web3.eth.Contract(MyConstant.RequestABI, requestContractAddress)
-    var data = await requestContract.methods.getData().call({from:request.user.address})
+    	var data = await requestContract.methods.getData().call({from:request.user.address})
 		var evidenceContractAddr = data['_evidAddr']
 		var publicKey = data['_puk'].toString() //requester's puk
     	body=body + loadOwnerDetail(`/frame/${evidenceContractAddr}_frame1.jpg`,
@@ -235,11 +232,7 @@ async function requestGetData(request, result, body){
 	return body
 }
 
-async function getRekey(){
-	
-	
-}
-
+// owner의 승인
 router.post('/owner_yes', (request, response)=>{
 	if (!auth.isOwner(request, response)) {
 		response.redirect('/');
@@ -248,40 +241,37 @@ router.post('/owner_yes', (request, response)=>{
     var body=''
     var post = request.body
     var requestContractAddress = post.requestContractAddress
-		var publicKey = post.publicKey
-		
-		var evidenceContractAddress = post.evidenceContractAddress
+	var publicKey = post.publicKey
+	var evidenceContractAddress = post.evidenceContractAddress
     console.log('requestContractAddr: ', requestContractAddress)
-		console.log('publickKey: ', publicKey) //requester
-		console.log('evidenceContractAddress: ', evidenceContractAddress)
-		
+	console.log('publickKey: ', publicKey) //requester
+	console.log('evidenceContractAddress: ', evidenceContractAddress)
 		
     requestContract = new web3.eth.Contract(MyConstant.RequestABI, requestContractAddress)
 	//python 실행 재암호화키와 link 받아오기
-		child = exec(`python ../keyRequestServer.py --request 'reKey' --email '${request.user.email}' --password '${request.user.password}' --publicKey '${publicKey}' --evidenceContractAddress '${evidenceContractAddress}'`, function (error, stdout, stderr) {
-			var output = stdout.split('\n')
-			console.log(output)
-			var correctness = output[0].substring(0,7)
-			var ownerPublicKey = output[2].substring(0,66)
-			console.log(ownerPublicKey)
-			var length = output[3]
-			var kfrags = output[4].substring(0,length)
-			console.log(kfrags)
-			console.log('stderr: ' + stderr);
-			if (error !== null) {
-					console.log('exec error: ' + error);
-			}
-			if(correctness != 'correct'){
-				console.log('error')
-				response.redirect('/topic/owner')
-				return
-			}
+	child = exec(`python ../keyRequestServer.py --request 'reKey' --email '${request.user.email}' --password '${request.user.password}' --publicKey '${publicKey}' --evidenceContractAddress '${evidenceContractAddress}'`, function (error, stdout, stderr) {
+		var output = stdout.split('\n')
+		console.log(output)
+		var correctness = output[0].substring(0,7)
+		var ownerPublicKey = output[2].substring(0,66)
+		console.log(ownerPublicKey)
+		var length = output[3]
+		var kfrags = output[4].substring(0,length)
+		console.log(kfrags)
+		console.log('stderr: ' + stderr);
+		if (error !== null) {
+				console.log('exec error: ' + error);
+		}
+		if(correctness != 'correct'){
+			console.log('error')
+			response.redirect('/topic/owner')
+			return
+		}
 		//db에 저장
 		db.all('INSERT INTO requesterInfo VALUES (?, ?, ?);', [requestContractAddress, ownerPublicKey, kfrags])
 
 		requestContract.methods.setData(ownerPublicKey,correctness).send({from:request.user.address, gas:500000}, (err, txHash)=>{
-      
-			var title = 'WEB - owner';
+      		var title = 'WEB - owner';
 			var html = template.HTML(title,`
 				${txHash}
 				<form ref='uploadForm' id='uploadForm' action='/topic/upload' method='post' encType="multipart/form-data">
@@ -297,9 +287,6 @@ router.post('/owner_yes', (request, response)=>{
 			response.send(html); 
 		  })  
 	});
-	
-
-
 })
 
 router.post('/upload', (req,res)=>{
@@ -307,7 +294,6 @@ router.post('/upload', (req,res)=>{
 		return res.status(400).send('No files were uploaded.')
 	}
   	let sampleFile = req.files.sampleFile
-
   	sampleFile.mv('/Users/thkim/Development/Blockchain/Dapp_blackbox/Cloud/uploadedfile', function(err) {
 		if (err)
 			return res.status(500).send(err);
@@ -334,15 +320,17 @@ router.get('/requester', function (request, response) {
 			requestContractAddress, evidenceContractAddress)
 		}
 		var title = 'WEB - requester';
-			var html = template.HTML(title,`
-										${body}
-									`, `
-										<p><a href="/topic/search">search</a></p>
-										<p><a href="/topic/owner">owner</a></p>
-										<p><a href="/topic/requester">requester</a><p>
-									`
-		   							, auth.statusUI(request, response));
-		 		response.send(html);
+		var html = template.HTML(title,
+								`
+								${body}
+								`, 
+								`
+									<p><a href="/topic/search">search</a></p>
+									<p><a href="/topic/owner">owner</a></p>
+									<p><a href="/topic/requester">requester</a><p>
+								`
+		   						, auth.statusUI(request, response));
+		response.send(html);
 	})
 	// const requestContract = new web3.eth.Contract(MyConstant.RequestABI,
 	// 												'0x3c04C588fF0C1D8FCea8456453C933e8fCD35290')
@@ -364,7 +352,6 @@ router.get('/requester', function (request, response) {
   // 	})
 })
 
-
 router.post('/requester_process', (request, response)=>{
 	if (!auth.isOwner(request, response)) {
 		response.redirect('/');
@@ -373,17 +360,15 @@ router.post('/requester_process', (request, response)=>{
     var body=''
     var post = request.body
     var requestContractAddress = post.requestContractAddress
-		var evidenceContractAddress = post.evidenceContractAddress
+	var evidenceContractAddress = post.evidenceContractAddress
     console.log('requestContractAddr: ', requestContractAddress)
-		console.log('evidenceContractAddress: ', evidenceContractAddress)
-		
-		
-		requestContract = new web3.eth.Contract(MyConstant.RequestABI, requestContractAddress)
-		requestContract.methods.getReKey().call({from:request.user.address}, (err, result)=>{
+	console.log('evidenceContractAddress: ', evidenceContractAddress)
+	
+	requestContract = new web3.eth.Contract(MyConstant.RequestABI, requestContractAddress)
+	requestContract.methods.getReKey().call({from:request.user.address}, (err, result)=>{
 		var ownerPublicKey = result['_rekey']
 		console.log(ownerPublicKey)
 		var link = result['_link']
-
 		child = exec(`python ../keyRequestServer.py --request 'trans' --email '${request.user.email}' --password '${request.user.password}' --ownerPublicKey '${ownerPublicKey}' --requestContractAddress '${requestContractAddress}' --evidenceContractAddress '${evidenceContractAddress}'`, function (error, stdout, stderr) {
 			var output = stdout.split('\n')
 			console.log(output)
@@ -401,21 +386,20 @@ router.post('/requester_process', (request, response)=>{
 			if (error !== null) {
 				console.log('exec error: ' + error);
 			}
-		
 			//파일 다운로드?
-
-
-		//console.log('body: ', body)   
-		var title = 'WEB - owner';
-		var html = template.HTML(title,`
-									<p>rekey : ${ownerPublicKey}</p>
-									<p>link : ${link}</p>
-								`, `
-									<p><a href="/topic/search">search</a></p>
-									<p><a href="/topic/owner">owner</a></p>
-									<p><a href="/topic/requester">requester</a><p>
-								`
-									, auth.statusUI(request, response));
+			//console.log('body: ', body)   
+			var title = 'WEB - owner';
+			var html = template.HTML(title,
+									`
+										<p>rekey : ${ownerPublicKey}</p>
+										<p>link : ${link}</p>
+									`, 
+									`
+										<p><a href="/topic/search">search</a></p>
+										<p><a href="/topic/owner">owner</a></p>
+										<p><a href="/topic/requester">requester</a><p>
+									`, 
+									auth.statusUI(request, response));
 			response.send(html);
 		})
 	})
@@ -454,10 +438,5 @@ router.post('/requester_process', (request, response)=>{
 	// 		response.send(html); 
 	// 	  })  
 	// });
-	
-
-
 })
-
-
 module.exports = router;

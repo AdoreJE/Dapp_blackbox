@@ -6,7 +6,6 @@ web3 = new Web3(new Web3.providers.WebsocketProvider("ws://155.230.16.117:7545")
 var db = new sqlite3.Database('C:/Dapp_blackbox/Cloud/evidence.db')
 // var db = new sqlite3.Database('/Users/thkim/Development/Blockchain/Dapp_blackbox/Cloud/evidence.db');
 
-
 const SearchContract = new web3.eth.Contract(MyConstant.SearchABI, MyConstant.SearchAddress)
 //1초마다 반복실행
 ! function getAddress(){

@@ -191,5 +191,3 @@ while True:
         clientSocket.close()
     #print('close')
     # clientSocket.close()
-        
-
