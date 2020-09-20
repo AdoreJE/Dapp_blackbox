@@ -27,4 +27,4 @@
 ```
 
 ## Paper
-A Privacy-preserving Dashcam Video Sharing on Blockchain with Automatic Accident Detection
+Automatic, location‑privacy preserving dashcam video sharing using blockchain and deep learning
